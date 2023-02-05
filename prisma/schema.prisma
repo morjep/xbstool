@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// A project can have many breakdowns
+// A breakdown can have one project
+// A breakdown can have many elements
+// An element can have one breakdown
+// An element can have many elements as children
+// An element can have one parent element
+
+model Project {
+  id         String      @id @default(uuid())
+  name       String
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  deletedAt  DateTime?
+  breakdowns Breakdown[]
+}
+
+model Breakdown {
+  id        String    @id @default(uuid())
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  projectId String
+  project   Project   @relation(fields: [projectId], references: [id])
+  elements  Element[]
+}
+
+model Element {
+  id          String    @id @default(uuid())
+  name        String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+  breakdownId String
+  breakdown   Breakdown @relation(fields: [breakdownId], references: [id])
+  parent      Element?  @relation("ElementToElement", fields: [parentId], references: [id])
+  parentId    String?
+  children    Element[] @relation("ElementToElement")
+}
