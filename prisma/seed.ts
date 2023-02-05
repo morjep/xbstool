@@ -15,6 +15,9 @@ function log() {
   });
 }
 
+/**
+ * It creates a project, a breakdown, a task, two sub tasks, and a sub sub task
+ */
 async function seed() {
   let currentProject = await createNewProject("My first project via the model");
   let currentBreakdown = await createNewBreakdown(
