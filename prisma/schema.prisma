@@ -38,14 +38,14 @@ model Breakdown {
 }
 
 model Element {
-  id          String    @id @default(uuid())
-  name        String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  deletedAt   DateTime?
-  breakdownId String
-  breakdown   Breakdown @relation(fields: [breakdownId], references: [id])
-  parent      Element?  @relation("ElementToElement", fields: [parentId], references: [id])
-  parentId    String?
-  children    Element[] @relation("ElementToElement")
+  id              String    @id @default(uuid())
+  name            String
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
+  breakdownId     String
+  breakdown       Breakdown @relation(fields: [breakdownId], references: [id])
+  parentElement   Element?  @relation("ElementToElement", fields: [parentElementId], references: [id])
+  parentElementId String?
+  children        Element[] @relation("ElementToElement")
 }
