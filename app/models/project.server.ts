@@ -1,40 +1,34 @@
 import { prisma } from "~/utils/db.server";
+import type { Project } from "@prisma/client";
 
-/**
- * It returns all projects in the database
- * @returns An array of objects with the id and name of each project.
- */
-export async function getAllProjects() {
-  return prisma.project.findMany({
-    select: {
-      id: true,
-      name: true,
-    },
-  });
+export async function getAllProjects(): Promise<Project[]> {
+  // Get all projects from the database
+  const projects = prisma.project.findMany({});
+
+  // Return the projects
+  return projects;
 }
 
-/**
- * It creates a new project with the given name
- * @param {string} name - string
- * @returns A promise that resolves to a Project object.
- */
-export async function createNewProject(name: string) {
-  return prisma.project.create({
-    data: {
-      name,
-    },
-  });
-}
-
-/**
- * It returns a project by its id
- * @param {string} id - The id of the project you want to get.
- * @returns A promise that resolves to a Project object.
- */
-export async function getProjectById(id: string) {
-  return prisma.project.findUnique({
+export async function getProjectWithName(projectName: string): Promise<Project | null> {
+  // Get the project with the provided name
+  const project = await prisma.project.findFirst({
     where: {
-      id,
+      projectName,
     },
   });
+
+  // Return the project
+  return project;
+}
+
+export async function createNewProject(projectName: string): Promise<Project> {
+  // Create a new project with the provided name
+  const project = await prisma.project.create({
+    data: {
+      projectName,
+    },
+  });
+
+  // Return the new project
+  return project;
 }

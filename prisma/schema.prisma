@@ -18,28 +18,31 @@ datasource db {
 // An element can have one parent element
 
 model Project {
-  id         String      @id @default(uuid())
-  name       String
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  deletedAt  DateTime?
-  breakdowns Breakdown[]
+  id          String      @id @default(uuid())
+  projectName String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  deletedAt   DateTime?
+  breakdowns  Breakdown[]
 }
 
 model Breakdown {
-  id        String    @id @default(uuid())
-  name      String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
-  projectId String
-  project   Project   @relation(fields: [projectId], references: [id])
-  elements  Element[]
+  id            String    @id @default(uuid())
+  breakdownName String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+  projectId     String
+  project       Project   @relation(fields: [projectId], references: [id])
+  elements      Element[]
+  autoLayout    Boolean?
+  data          String?
 }
 
 model Element {
   id              String    @id @default(uuid())
-  name            String
+  elementName     String
+  top             Boolean?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
   deletedAt       DateTime?
@@ -48,4 +51,10 @@ model Element {
   parentElement   Element?  @relation("ElementToElement", fields: [parentElementId], references: [id])
   parentElementId String?
   children        Element[] @relation("ElementToElement")
+  nodeType        String?
+  nodeLabel       String
+  nodeXpos        Float?
+  nodeYpos        Float?
+  nodeExtent      String?
+  level           Int?
 }
