@@ -4,7 +4,6 @@ import {
   createNewBreakdown,
   addDataToBreakdown,
 } from "~/models/breakdown.server";
-import { getAllElements, createTopElement, createElement } from "~/models/element.server";
 
 function log() {
   getAllProjects().then((projects) => {
@@ -12,9 +11,6 @@ function log() {
   });
   getAllBreakdowns().then((breakdown) => {
     console.log(breakdown);
-  });
-  getAllElements().then((elements) => {
-    console.log(elements);
   });
 }
 
