@@ -23,16 +23,16 @@ const generateLayoutFromData = (data: String) => {
   const lines = splitLines(data);
 
   // Count the number of level 2 nodes
-  const level2Nodes = lines.filter((line: string) => line.trim().startsWith("## ")).length;
+  const level2Nodes = lines.filter((line: string) => line.trim().startsWith("** ")).length;
   console.log("Level 2 nodes:", level2Nodes);
 
   lines.forEach((line: string) => {
     id = id + 1;
 
     // Count the number of # in the line
-    const level = (line.match(/#/g) || []).length;
+    const level = (line.match(/\*/g) || []).length;
     // Remove the # from the line
-    const label = line.replace(/#/g, "");
+    const label = line.replace(/\*/g, "");
 
     if (level != 0) {
       if (level === 1) {

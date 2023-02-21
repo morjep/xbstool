@@ -31,7 +31,7 @@ function Flow({ initialNodes, initialEdges }: { initialNodes: Node[]; initialEdg
       fitView
     >
       <Controls />
-      <MiniMap />
+      {/* <MiniMap /> */}
     </ReactFlow>
   );
 }
