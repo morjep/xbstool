@@ -13,7 +13,7 @@ import invariant from "tiny-invariant";
 import { getBreakdownById } from "~/models/breakdown.server";
 
 import generateLayoutFromData from "~/components/Flow/generateLayoutFromData";
-import { Tabbar } from "~/components/Components/Tabbar";
+import { Navbar } from "~/components/Components/Navbar";
 
 type LoaderData = {
   initialNodes: Node[];
@@ -49,7 +49,7 @@ export default function IdRoute() {
   const { initialNodes, initialEdges, id, name } = useLoaderData<LoaderData>();
   return (
     <div>
-      <Tabbar id={id} name={name} />
+      <Navbar id={id} name={name} />
       <div style={{ height: 1024 }}>
         <div className="app">
           <Flow initialNodes={initialNodes} initialEdges={initialEdges} />

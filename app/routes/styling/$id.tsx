@@ -5,7 +5,7 @@ import invariant from "tiny-invariant";
 
 import { getBreakdownById } from "~/models/breakdown.server";
 
-import { Tabbar } from "~/components/Components/Tabbar";
+import { Navbar } from "~/components/Components/Navbar";
 
 type LoaderData = {
   id: string;
@@ -32,7 +32,7 @@ export default function IdRoute() {
   const { id, name } = useLoaderData<LoaderData>();
   return (
     <div>
-      <Tabbar id={id} name={name} />
+      <Navbar id={id} name={name} />
       <div style={{ height: 1024 }}>Styling input here we go</div>
     </div>
   );

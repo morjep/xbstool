@@ -1,8 +1,9 @@
 import { NavLink } from "react-router-dom";
+import { Tabbar } from "./Tabbar";
 
-export const Navbar = () => {
+export const Navbar = ({ name, id }) => {
   return (
-    <div className="navbar bg-primary text-primary-content">
+    <div className="navbar bg-red-600 text-primary-content">
       <div className="navbar-start">
         <NavLink to="/mgmt">
           <div className="tooltip tooltip-bottom" data-tip="Home">
@@ -24,14 +25,13 @@ export const Navbar = () => {
             </label>
           </div>
         </NavLink>
+        <div>{name}</div>
       </div>
-      <div className="navbar-center">
-        <a className="btn btn-ghost normal-case text-xl">Breakdown Tool</a>
-      </div>
+      <div className="navbar-center">{id ? <Tabbar id={id} /> : null}</div>
       <div className="navbar-end">
         <div className="avatar placeholder">
           <div className="bg-neutral-focus text-neutral-content rounded-full w-10">
-            <span>MX</span>
+            <span>MJ</span>
           </div>
         </div>
       </div>

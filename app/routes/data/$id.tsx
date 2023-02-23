@@ -5,11 +5,12 @@ import invariant from "tiny-invariant";
 
 import { getBreakdownById } from "~/models/breakdown.server";
 
-import { Tabbar } from "~/components/Components/Tabbar";
+import { Navbar } from "~/components/Components/Navbar";
 
 type LoaderData = {
   id: string;
   name: string;
+  data: string;
 };
 
 // Server-side
@@ -24,16 +25,34 @@ export const loader = async ({ request, params }) => {
   return json({
     id,
     name: breakdown.breakdownName,
+    data: breakdown.data,
   } as LoaderData);
 };
 
 // Client-side
 export default function IdRoute() {
-  const { id, name } = useLoaderData<LoaderData>();
+  const { id, name, data } = useLoaderData<LoaderData>();
   return (
     <div>
-      <Tabbar id={id} name={name} />
-      <div style={{ height: 1024 }}>Data input here we go</div>
+      <Navbar id={id} name={name} />
+      <div style={{ height: 1024 }}>
+        <div className="text-center">
+          <p>
+            <br />
+            <textarea
+              id="markdown"
+              rows={35}
+              cols={120}
+              name="markdown"
+              className={`font-mono border-2`}
+              value={data}
+            />
+          </p>
+          <button type="submit" className="btn bg-red-600">
+            Submit
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

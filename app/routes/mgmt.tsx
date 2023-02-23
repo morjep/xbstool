@@ -4,7 +4,7 @@ import { Link, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 
 import { getAllBreakdowns } from "~/models/breakdown.server";
-
+import { Navbar } from "~/components/Components/Navbar";
 export const loader = async () => {
   const breakdowns = await getAllBreakdowns();
   invariant(breakdowns, "No breakdowns found");
@@ -17,6 +17,7 @@ export default function MgmtRoute() {
 
   return (
     <div>
+      <Navbar name="" id="" />
       <h1>Breakdowns</h1>
       <ul>
         {breakdowns.map((breakdown) => (
