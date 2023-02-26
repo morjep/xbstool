@@ -29,4 +29,15 @@ model Breakdown {
   project       Project   @relation(fields: [projectId], references: [id])
   autoLayout    Boolean?
   data          String?
+  style         Style?
+}
+
+model Style {
+  id          String    @id @default(uuid())
+  styleName   String
+  breakdown   Breakdown @relation(fields: [breakdownId], references: [id])
+  breakdownId String    @unique
+  theme       String?
+  arrows      Boolean?
+  shadows     Boolean?
 }
