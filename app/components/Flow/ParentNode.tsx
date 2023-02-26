@@ -3,6 +3,7 @@ import { memo } from "react";
 import type { NodeProps } from "reactflow";
 import { Handle, Position } from "reactflow";
 import Indicator from "./Indicator";
+import NodeBox from "./NodeBox";
 
 const targetHandleStyle: CSSProperties = {};
 const sourceHandleStyle: CSSProperties = { left: 10 };
@@ -13,15 +14,11 @@ const ParentNode: FC<NodeProps> = ({ data, xPos, yPos }) => {
     <>
       <Indicator indicator={data.indicator}>
         {data.due && (
-          <span className="indicator-item indicator-top indicator-start badge text-xs badge-neutral">
+          <span className="indicator-item indicator-top indicator-start badge text-xs badge-accent">
             {data.due}
           </span>
         )}
-        <div className="border border-black rounded w-40 flex justify-left shadow-lg shadow-gray-500  bg-gray-100">
-          <div className="grid">
-            <div className="px-2 py-2">{data.label}</div>
-          </div>{" "}
-        </div>
+        <NodeBox label={data.label} />
         <Handle type="target" position={Position.Top} id="t" style={targetHandleStyle} />
         <Handle type="source" position={Position.Bottom} id="b" style={sourceHandleStyle} />
       </Indicator>
