@@ -5,7 +5,7 @@ import type { Node, Edge } from "reactflow";
 import reactFlowStyles from "reactflow/dist/style.css";
 import styles from "~/styles/flow.css";
 
-import { json } from "@remix-run/node"; // or cloudflare/deno
+import { json, redirect } from "@remix-run/node"; // or cloudflare/deno
 import { useLoaderData } from "@remix-run/react";
 
 import invariant from "tiny-invariant";
@@ -29,7 +29,10 @@ export const loader = async ({ request, params }) => {
   const breakdown = await getBreakdownById(id);
 
   invariant(breakdown, "No breakdown found");
-  invariant(breakdown.data, "No breakdown data found");
+
+  if (breakdown.data === null) {
+    return redirect("/data/" + id);
+  }
 
   const { nodes, edges } = generateLayoutFromData(breakdown.data);
 

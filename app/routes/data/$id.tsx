@@ -21,7 +21,6 @@ export const loader = async ({ request, params }) => {
   const breakdown = await getBreakdownById(id);
 
   invariant(breakdown, "No breakdown found");
-  invariant(breakdown.data, "No breakdown data found");
 
   return json({
     id,
