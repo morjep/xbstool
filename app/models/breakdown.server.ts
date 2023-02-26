@@ -23,6 +23,13 @@ export async function getBreakdownById(breakdownId: string) {
   });
 }
 
+export async function updateBreakdownData(breakdownId: string, data: string) {
+  return prisma.breakdown.update({
+    where: { id: breakdownId },
+    data: { data },
+  });
+}
+
 export async function getBreakdownByProjectAndName(projectId: string, breakdownName: string) {
   return prisma.breakdown.findFirst({
     where: { projectId, breakdownName },

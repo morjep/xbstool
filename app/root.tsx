@@ -26,7 +26,7 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className="bg-base-200">
         {/* <Navbar /> */}
         <Outlet />
         <ScrollRestoration />

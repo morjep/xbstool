@@ -3,7 +3,7 @@ import { Tabbar } from "./Tabbar";
 
 export const Navbar = ({ name, id }) => {
   return (
-    <div className="navbar bg-red-600 text-primary-content">
+    <div className="navbar bg-primary text-primary-content">
       <div className="navbar-start">
         <NavLink to="/mgmt">
           <div className="tooltip tooltip-bottom" data-tip="Home">

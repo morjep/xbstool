@@ -83,6 +83,30 @@ async function seed() {
 
   `
   );
+  breakdown = await createNewBreakdown("Xpres Milestones", project.id);
+  await addDataToBreakdown(
+    breakdown.id,
+    `* Milestones
+  ** Project baseline established __due_30/3__
+  *** Story mapping complete
+  *** Stories mapped to prioritised versions
+  *** Backlog populated __indicator_success__
+  *** System design / domain model ready
+  *** UI wireframes done __indicator_warning__
+  ** Customer Acceptance Test start __due_1/6__
+  ** Card solution live __due_31/8__
+  ** Loan solution live __due_N/A__
+  `
+  );
+
+  project = await createNewProject("Booking");
+  breakdown = await createNewBreakdown("Features", project.id);
+  await addDataToBreakdown(
+    breakdown.id,
+    `
+  * Features
+    `
+  );
 
   console.log("Seeding complete!");
 
