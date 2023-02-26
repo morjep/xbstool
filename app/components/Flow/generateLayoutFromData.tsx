@@ -82,7 +82,7 @@ const generateLayoutFromData = (data: String) => {
         nodePosition = { x: parentX + 35, y: childYoffset + 100 };
         nodeExtent = "default";
         nodeType = "child";
-        if (labelStr.length < 25) {
+        if (labelStr.length < 26) {
           childYoffset = childYoffset + 60; // for the next child
         } else {
           childYoffset = childYoffset + 80; // for the next child

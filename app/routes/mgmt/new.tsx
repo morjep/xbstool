@@ -54,7 +54,7 @@ export default function NewRoute() {
           />
         </label>
         <div className="py-2"></div>
-        <button type="submit" className="btn bg-primary w-32">
+        <button type="submit" className="btn bg-primary text-primary-content w-32">
           Create
         </button>{" "}
       </div>
@@ -80,7 +80,7 @@ export default function NewRoute() {
           />
         </label>
         <div className="py-2"></div>
-        <button type="submit" className="btn bg-primary w-32">
+        <button type="submit" className="btn bg-primary text-primary-content w-32">
           Create
         </button>{" "}
       </div>

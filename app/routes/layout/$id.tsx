@@ -53,7 +53,7 @@ export default function IdRoute() {
   return (
     <div>
       <Navbar id={id} name={name} />
-      <div className="px-8 py-8">
+      <div className="px-8 py-8" data-theme="light">
         <div style={{ height: 1024 }}>
           <div className="app bg-base-100 rounded-lg">
             <Flow initialNodes={initialNodes} initialEdges={initialEdges} />

@@ -28,7 +28,7 @@ export default function Index() {
               .map((breakdown) => (
                 <li key={breakdown.id} className="py-2">
                   <Link to={`/layout/${breakdown.id}`}>
-                    <span>{breakdown.breakdownName} </span>
+                    <span className="text-secondary-content">{breakdown.breakdownName} </span>
                   </Link>
                 </li>
               ))}
