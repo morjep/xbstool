@@ -21,7 +21,7 @@ const Node = ({ data, children }) => {
         <span className="indicator-item badge badge-xs badge-error"></span>
       )}
       {data.due && (
-        <span className="indicator-item indicator-top indicator-start badge text-xs badge-accent">
+        <span className="indicator-item indicator-top indicator-start badge badge-xs text-xs badge-accent">
           {data.due}
         </span>
       )}
