@@ -11,9 +11,15 @@ const Box = ({ label }) => {
 const Node = ({ data, children }) => {
   return (
     <div className="indicator">
-      {data.indicator == "success" && <span className="indicator-item badge badge-success"></span>}
-      {data.indicator == "warning" && <span className="indicator-item badge badge-warning"></span>}
-      {data.indicator == "danger" && <span className="indicator-item badge badge-error"></span>}
+      {data.indicator == "success" && (
+        <span className="indicator-item badge badge-xs badge-success"></span>
+      )}
+      {data.indicator == "warning" && (
+        <span className="indicator-item badge badge-xs badge-warning"></span>
+      )}
+      {data.indicator == "danger" && (
+        <span className="indicator-item badge badge-xs badge-error"></span>
+      )}
       {data.due && (
         <span className="indicator-item indicator-top indicator-start badge text-xs badge-accent">
           {data.due}

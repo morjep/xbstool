@@ -19,6 +19,11 @@ export async function getBreakdownById(breakdownId: string) {
       breakdownName: true,
       projectId: true,
       data: true,
+      style: {
+        select: {
+          theme: true,
+        },
+      },
     },
   });
 }

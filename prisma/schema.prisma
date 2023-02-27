@@ -34,10 +34,9 @@ model Breakdown {
 
 model Style {
   id          String    @id @default(uuid())
-  styleName   String
   breakdown   Breakdown @relation(fields: [breakdownId], references: [id])
   breakdownId String    @unique
-  theme       String?
-  arrows      Boolean?
-  shadows     Boolean?
+  theme       String?   @default("light")
+  arrows      Boolean?  @default(true)
+  shadows     Boolean?  @default(true)
 }

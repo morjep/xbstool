@@ -107,7 +107,7 @@ const generateLayoutFromData = (data: String) => {
         extent: nodeExtent,
         type: nodeType,
       };
-      console.log("Node:", node);
+      // console.log("Node:", node);
       nodes.push(node);
 
       // Create the edge

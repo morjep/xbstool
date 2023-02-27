@@ -46,22 +46,22 @@ export default function IdRoute() {
   return (
     <div>
       <Navbar id={id} name={name} />
-      <Form method="post">
+      <Form reloadDocument method="post">
         <div style={{ height: 1024 }}>
-          <div className="text-center">
+          <div className="text-center ">
             <p>
               <br />
               <textarea
                 id="markdown"
-                rows={35}
+                rows={30}
                 cols={120}
                 name="markdown"
-                className="textarea textarea-bordered"
+                className="textarea textarea-bordered bg-base-100"
                 defaultValue={data}
               />
             </p>
             <button type="submit" className="btn bg-primary">
-              Submit
+              Save
             </button>{" "}
           </div>
         </div>

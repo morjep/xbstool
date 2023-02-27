@@ -14,18 +14,19 @@ import { getBreakdownById } from "~/models/breakdown.server";
 
 import generateLayoutFromData from "~/components/Flow/generateLayoutFromData";
 import { Navbar } from "~/components/Components/Navbar";
+import { createNewStyle } from "~/models/style.server";
 
 type LoaderData = {
   initialNodes: Node[];
   initialEdges: Edge[];
   id: string;
   name: string;
+  theme: string;
 };
 
 // Server-side
 export const loader = async ({ request, params }) => {
   const { id } = params;
-  console.log("ID: ", id);
   const breakdown = await getBreakdownById(id);
 
   invariant(breakdown, "No breakdown found");
@@ -33,6 +34,14 @@ export const loader = async ({ request, params }) => {
   if (breakdown.data === null) {
     return redirect("/data/" + id);
   }
+
+  if (breakdown.style === null) {
+    await createNewStyle(id);
+    console.log(
+      "Created new style for breakdown with id: " + id + " and name: " + breakdown.breakdownName
+    );
+  }
+  const theme = breakdown.style?.theme || "emerald";
 
   const { nodes, edges } = generateLayoutFromData(breakdown.data);
 
@@ -44,17 +53,18 @@ export const loader = async ({ request, params }) => {
     initialEdges: edges,
     id,
     name: breakdown.breakdownName,
+    theme,
   } as LoaderData);
 };
 
 // Client-side
 export default function IdRoute() {
-  const { initialNodes, initialEdges, id, name } = useLoaderData<LoaderData>();
+  const { initialNodes, initialEdges, id, name, theme } = useLoaderData<LoaderData>();
   return (
     <div>
       <Navbar id={id} name={name} />
       <div className="px-8 py-8">
-        <div data-theme="emerald" className="rounded-lg">
+        <div data-theme={theme} className="rounded-lg">
           <div style={{ height: 1024 }}>
             <div className="app bg-base-100 rounded-lg">
               <Flow initialNodes={initialNodes} initialEdges={initialEdges} />
