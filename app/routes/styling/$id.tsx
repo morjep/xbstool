@@ -98,7 +98,7 @@ export default function IdRoute() {
             <select
               className="select select-bordered w-full max-w-xs"
               name="theme"
-              onChange={(value) => fetcher.submit(value.target.form)}
+              onChange={(e) => fetcher.submit(e.target.form)}
             >
               {themes.map((theme) => (
                 <option key={theme} value={theme} selected={theme === themeSelected}>

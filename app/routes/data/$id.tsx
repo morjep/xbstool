@@ -1,12 +1,13 @@
 import { json, redirect } from "@remix-run/node"; // or cloudflare/deno
 import type { ActionArgs } from "@remix-run/node";
-import { useLoaderData, Form } from "@remix-run/react";
+import { useLoaderData, Form, useFetcher } from "@remix-run/react";
 
 import invariant from "tiny-invariant";
 
 import { getBreakdownById, updateBreakdownData } from "~/models/breakdown.server";
 
 import { Navbar } from "~/components/Components/Navbar";
+import debounce from "~/utils/util";
 
 type LoaderData = {
   id: string;
@@ -37,12 +38,20 @@ export const action = async ({ request }: ActionArgs) => {
 
   await updateBreakdownData(id, data as string);
 
-  return redirect("/layout/" + id);
+  return redirect("/data/" + id);
 };
 
 // Client-side
 export default function IdRoute() {
   const { id, name, data } = useLoaderData<LoaderData>();
+  const fetcher = useFetcher();
+
+  const _autoSave = (e) => {
+    fetcher.submit(e.target.form);
+  };
+
+  const autoSave = debounce((e) => _autoSave(e), 500);
+
   return (
     <div>
       <Navbar id={id} name={name} />
@@ -58,11 +67,13 @@ export default function IdRoute() {
                 name="markdown"
                 className="textarea textarea-bordered bg-base-100"
                 defaultValue={data}
+                onChange={autoSave}
               />
             </p>
-            <button type="submit" className="btn bg-primary">
+            {fetcher.state === "submitting" && <p>Saving...</p>}
+            {/* <button type="submit" className="btn bg-primary">
               Save
-            </button>{" "}
+            </button>{" "} */}
           </div>
         </div>
       </Form>
