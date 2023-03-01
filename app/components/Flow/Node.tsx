@@ -1,9 +1,16 @@
-const Box = ({ label }) => {
+const Box = ({ label, progressBar, progressValue }) => {
   return (
     <div className="border border-primary-focus rounded w-40 shadow-md shadow-base-300  bg-base-100">
       <div className="text-center">
-        <div className="px-2 py-2">{label}</div>
+        <div className="px-2 py-1">{label}</div>
       </div>{" "}
+      {progressBar && (
+        <progress
+          className="progress progress-info w-40 px-4"
+          value={progressValue}
+          max="100"
+        ></progress>
+      )}
     </div>
   );
 };
@@ -17,7 +24,7 @@ const Node = ({ data, children }) => {
       {data.indicator == "warning" && (
         <span className="indicator-item badge badge-xs badge-warning"></span>
       )}
-      {data.indicator == "danger" && (
+      {data.indicator == "error" && (
         <span className="indicator-item badge badge-xs badge-error"></span>
       )}
       {data.due && (
@@ -25,7 +32,8 @@ const Node = ({ data, children }) => {
           {data.due}
         </span>
       )}
-      <Box label={data.label} />
+      <Box label={data.label} progressBar={data.progressBar} progressValue={data.progressValue} />
+
       {children}
     </div>
   );

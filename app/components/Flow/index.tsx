@@ -1,15 +1,22 @@
 import { useCallback } from "react";
 import ReactFlow, { useNodesState, useEdgesState, addEdge, Controls, MiniMap } from "reactflow";
-import type { Connection, Node, Edge } from "reactflow";
+import { Edge } from "reactflow";
+import type { Connection, Node } from "reactflow";
 
 import ChildNode from "./ChildNode";
 import TopNode from "./TopNode";
 import ParentNode from "./ParentNode";
 
+import Edge from "./Edge";
+
 const nodeTypes = {
   child: ChildNode,
   top: TopNode,
   parent: ParentNode,
+};
+
+const edgeTypes = {
+  custom: Edge,
 };
 
 function Flow({ initialNodes, initialEdges }: { initialNodes: Node[]; initialEdges: Edge[] }) {

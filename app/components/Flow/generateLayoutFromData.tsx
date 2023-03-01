@@ -14,7 +14,6 @@ const generateLayoutFromData = (data: String) => {
   let topId = 0;
   let parentId = 0;
   let nodePosition = { x: 0, y: 0 };
-  let nodeExtent = "parent";
   let nodeType = "top";
   let edgeSource = "";
   let edgeTarget = "";
@@ -36,22 +35,26 @@ const generateLayoutFromData = (data: String) => {
 
     // due date is indicated by __due__ in the line, so we need to extract that
     const dueDate = label.match(/__due_.*__/g);
-    let dueDateStr = dueDate ? dueDate[0].replace(/__due_/g, "") : "";
-    dueDateStr = dueDateStr.replace(/__/g, "");
+    const dueDateStr = dueDate ? dueDate[0].replace(/__due_/g, "").replace(/__/g, "") : "";
 
+    // Indicator is indicated by __indicator__ in the line, so we need to extract that
+    // Indicator can be success, warning or error
+    // Indicator also has a short form: __is__, __iw__ and __ie__
     const indicator = label.match(/__indicator_.*__/g);
-    let indicatorStr = indicator ? indicator[0].replace(/__indicator_/g, "") : "";
-    indicatorStr = indicatorStr.replace(/__/g, "");
+    let indicatorStr = indicator
+      ? indicator[0].replace(/__indicator_/g, "").replace(/__/g, "")
+      : "";
 
-    // const tag1 = label.match(/__tag1_.*__/g);
-    // let tag1Str = tag1 ? tag1[0].replace(/__tag1_/g, "") : "";
-    // tag1Str = tag1Str.replace(/__/g, "");
+    indicatorStr = label.match(/__is__/g) ? "success" : indicatorStr;
+    indicatorStr = label.match(/__iw__/g) ? "warning" : indicatorStr;
+    indicatorStr = label.match(/__ie__/g) ? "error" : indicatorStr;
 
-    // const tag2 = label.match(/__tag2_.*__/g);
-    // let tag2Str = tag2 ? tag2[0].replace(/__tag2_/g, "") : "";
-    // tag2Str = tag2Str.replace(/__/g, "");
+    // Progress bar is indicated by __pbXX__ in the line, so we need to extract that
+    const progress = label.match(/__pb.*__/g);
+    const progressBar = progress ? true : false;
+    const progressValue = progress ? progress[0].replace(/__pb/g, "").replace(/__/g, "") : "0";
 
-    // remove the meta data from the label
+    // remove the meta data from the label (should not be any left)
     let labelStr = label.replace(/__.*__/g, "");
 
     // Shorten the label if it is too long
@@ -63,7 +66,6 @@ const generateLayoutFromData = (data: String) => {
       if (level === 1) {
         topId = id;
         nodePosition = { x: 0, y: 0 };
-        nodeExtent = "parent";
         nodeType = "top";
       }
       if (level === 2) {
@@ -73,14 +75,12 @@ const generateLayoutFromData = (data: String) => {
           parentCount * parentXoffset - (level2Nodes * parentXoffset) / 2 - parentXoffset / 2;
         childYoffset = 100;
         nodePosition = { x: parentX, y: 100 };
-        nodeExtent = "parent";
         nodeType = "parent";
         edgeSource = topId.toString();
         edgeTarget = id.toString();
       }
       if (level === 3) {
         nodePosition = { x: parentX + 35, y: childYoffset + 100 };
-        nodeExtent = "default";
         nodeType = "child";
         if (labelStr.length < 26) {
           childYoffset = childYoffset + 60; // for the next child
@@ -102,9 +102,11 @@ const generateLayoutFromData = (data: String) => {
           label: labelStr.trim(),
           due: dueDateStr,
           indicator: indicatorStr,
+          progressBar: progressBar,
+          progressValue: progressValue,
         },
         position: nodePosition,
-        extent: nodeExtent,
+        // extent: nodeExtent,
         type: nodeType,
       };
       // console.log("Node:", node);
@@ -120,13 +122,14 @@ const generateLayoutFromData = (data: String) => {
           type: MarkerType.ArrowClosed,
           width: 20,
           height: 20,
-          color: "#000000",
+          color: "#a3a3a3",
         },
         style: {
           strokeWidth: 1,
-          stroke: "#000000",
+          stroke: "#a3a3a3",
         },
       };
+
       edges.push(edge);
     }
   });
