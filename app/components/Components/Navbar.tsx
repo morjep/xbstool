@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { Tabbar } from "./Tabbar";
 
-export const Navbar = ({ name, id }) => {
+export const Navbar = ({ name, id }: { name: string; id: string }) => {
   return (
     <div className="navbar bg-primary text-primary-content">
       <div className="navbar-start">

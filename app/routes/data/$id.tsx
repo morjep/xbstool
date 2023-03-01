@@ -1,5 +1,5 @@
 import { json, redirect } from "@remix-run/node"; // or cloudflare/deno
-import type { ActionArgs } from "@remix-run/node";
+import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { useLoaderData, Form, useFetcher } from "@remix-run/react";
 
 import invariant from "tiny-invariant";
@@ -16,9 +16,10 @@ type LoaderData = {
 };
 
 // Server-side
-export const loader = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const { id } = params;
-  console.log("ID: ", id);
+  invariant(id, "No ID provided");
+  invariant(typeof id === "string", "ID must be a string");
   const breakdown = await getBreakdownById(id);
 
   invariant(breakdown, "No breakdown found");
@@ -46,11 +47,11 @@ export default function IdRoute() {
   const { id, name, data } = useLoaderData<LoaderData>();
   const fetcher = useFetcher();
 
-  const _autoSave = (e) => {
+  const _autoSave = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     fetcher.submit(e.target.form);
   };
 
-  const autoSave = debounce((e) => _autoSave(e), 500);
+  const autoSave = debounce((e: React.ChangeEvent<HTMLTextAreaElement>) => _autoSave(e), 500);
 
   return (
     <div>

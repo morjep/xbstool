@@ -19,9 +19,6 @@ export default function MgmtRoute() {
                 <span>My Breakdowns</span>
               </NavLink>
             </li>
-            <li>
-              <a>Trash</a>
-            </li>
           </ul>
         </div>
 

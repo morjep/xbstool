@@ -7,7 +7,7 @@ import Node from "./Node";
 const targetHandleStyle: CSSProperties = {};
 const sourceHandleStyle: CSSProperties = { left: 10 };
 
-const ParentNode: FC<NodeProps> = ({ data, xPos, yPos }) => {
+const ParentNode: FC<NodeProps> = ({ data }) => {
   console.log(data);
   return (
     <>

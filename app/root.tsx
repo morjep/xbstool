@@ -4,8 +4,6 @@ import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from "@re
 import styles from "~/styles/global.css";
 import stylesheet from "./styles/app.css";
 
-import { Navbar } from "./components/Components/Navbar";
-
 export function links() {
   return [
     { rel: "stylesheet", href: styles },
@@ -27,7 +25,6 @@ export default function App() {
         <Links />
       </head>
       <body className="bg-base-200">
-        {/* <Navbar /> */}
         <Outlet />
         <ScrollRestoration />
         <Scripts />

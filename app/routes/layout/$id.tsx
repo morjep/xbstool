@@ -5,6 +5,7 @@ import type { Node, Edge } from "reactflow";
 import reactFlowStyles from "reactflow/dist/style.css";
 import styles from "~/styles/flow.css";
 
+import type { LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node"; // or cloudflare/deno
 import { useLoaderData } from "@remix-run/react";
 
@@ -25,8 +26,10 @@ type LoaderData = {
 };
 
 // Server-side
-export const loader = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderArgs) => {
   const { id } = params;
+  invariant(id, "No id found");
+  invariant(typeof id === "string", "Id is not a string");
   const breakdown = await getBreakdownById(id);
 
   invariant(breakdown, "No breakdown found");

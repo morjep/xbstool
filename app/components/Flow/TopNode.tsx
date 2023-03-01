@@ -6,7 +6,7 @@ import Node from "./Node";
 
 const sourceHandleStyle: CSSProperties = {};
 
-const TopNode: FC<NodeProps> = ({ data, xPos, yPos }) => {
+const TopNode: FC<NodeProps> = ({ data }) => {
   return (
     <>
       <Node data={data}>

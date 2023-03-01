@@ -1,5 +1,6 @@
 import { json } from "@remix-run/node"; // or cloudflare/deno
 import { Link, useLoaderData } from "@remix-run/react";
+import type { Project, Breakdown } from "@prisma/client";
 
 import invariant from "tiny-invariant";
 import { getAllProjects } from "~/models/project.server";
@@ -18,14 +19,14 @@ export default function Index() {
 
   return (
     <div>
-      {projects.map((project) => (
+      {projects.map((project: Project) => (
         <div key={project.id}>
           <div className="divider text-lg font-bold">{project.projectName}</div>
 
           <ul className="menu bg-base-100 w-full rounded-md">
             {breakdowns
-              .filter((breakdown) => breakdown.projectId === project.id)
-              .map((breakdown) => (
+              .filter((breakdown: Breakdown) => breakdown.projectId === project.id)
+              .map((breakdown: Breakdown) => (
                 <li key={breakdown.id} className="py-2">
                   <Link to={`/layout/${breakdown.id}`}>
                     <span className="text-secondary-content">{breakdown.breakdownName} </span>

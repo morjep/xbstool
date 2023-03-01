@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 const activeTab = "tab tab-bordered tab-active text-primary-content font-bold";
 const inactiveTab = "tab tab-bordered text-primary-content";
 
-export const Tabbar = ({ id }) => {
+export const Tabbar = ({ id }: { id: string }) => {
   return (
     <div className="tabs ">
       <NavLink

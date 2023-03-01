@@ -6,7 +6,7 @@ import Node from "./Node";
 
 const targetHandleStyle: CSSProperties = {};
 
-const ChildNode: FC<NodeProps> = ({ data, xPos, yPos }) => {
+const ChildNode: FC<NodeProps> = ({ data }) => {
   return (
     <>
       <Node data={data}>

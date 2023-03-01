@@ -1,4 +1,12 @@
-const Box = ({ label, progressBar, progressValue }) => {
+const Box = ({
+  label,
+  progressBar,
+  progressValue,
+}: {
+  label: string;
+  progressBar: boolean;
+  progressValue: string;
+}) => {
   return (
     <div className="border border-primary-focus rounded w-40 shadow-md shadow-base-300  bg-base-100">
       <div className="text-center">
@@ -15,7 +23,7 @@ const Box = ({ label, progressBar, progressValue }) => {
   );
 };
 
-const Node = ({ data, children }) => {
+const Node = ({ data, children }: { data: any; children: any }) => {
   return (
     <div className="indicator">
       {data.indicator == "success" && (
