@@ -19,7 +19,7 @@ const generateLayoutFromData = (data: String) => {
   let edgeTarget = "";
 
   // First split the data into lines
-  const lines = splitLines(data);
+  const lines = splitLines(data as string);
 
   // Count the number of level 2 nodes
   const level2Nodes = lines.filter((line: string) => line.trim().startsWith("** ")).length;
