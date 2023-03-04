@@ -58,7 +58,7 @@ export default function IdRoute() {
       <Navbar id={id} name={name} />
       <Form reloadDocument method="post">
         <div style={{ height: 1024 }}>
-          <div className="text-center ">
+          <div className="text-center">
             <p>
               <br />
               <textarea
@@ -66,7 +66,7 @@ export default function IdRoute() {
                 rows={30}
                 cols={120}
                 name="markdown"
-                className="textarea textarea-bordered bg-base-100"
+                className="textarea textarea-bordered textarea-primary bg-base-100"
                 defaultValue={data}
                 onChange={autoSave}
               />

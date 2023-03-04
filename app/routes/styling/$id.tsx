@@ -100,7 +100,7 @@ export default function IdRoute() {
               name="theme"
               onChange={(e) => fetcher.submit(e.target.form)}
             >
-              {themes.map((theme) => (
+              {themes.sort().map((theme) => (
                 <option key={theme} value={theme} selected={theme === themeSelected}>
                   {theme}
                 </option>

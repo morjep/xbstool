@@ -60,6 +60,9 @@ const generateLayoutFromData = (data: String) => {
   let nodeType = "top";
   let edgeSource = "";
   let edgeTarget = "";
+  let prevParentId = "";
+  let edgePrev = "";
+  let connectParents = false;
 
   const lines = splitLines(data as string);
   const level2Nodes = countParentNodes(lines);
@@ -69,10 +72,16 @@ const generateLayoutFromData = (data: String) => {
 
     const level = extractLevel(line);
     const content = extractContent(line);
+
     const dueDate = extractDueDate(content);
     const indicator = extractIndicator(content);
     const progressBar = extractProgressBar(content);
     const progressValue = extractProgressValue(content);
+
+    // Only check if we are on the first level (i.e. top level) - remember for subsequent passes
+    if (level === 1 && connectParents === false) {
+      connectParents = content.match(/__connect_parents__/g) ? true : false;
+    }
 
     // remove the meta data from the label (should not be any left)
     let label = content.replace(/__.*__/g, "");
@@ -85,6 +94,10 @@ const generateLayoutFromData = (data: String) => {
     if (level != 0) {
       if (level === 1) {
         topId = id;
+        // Drop the top node edges if we are connecting parents
+        if (connectParents) {
+          topId = -1;
+        }
         nodePosition = { x: 0, y: 0 };
         nodeType = "top";
       }
@@ -98,6 +111,9 @@ const generateLayoutFromData = (data: String) => {
         nodeType = "parent";
         edgeSource = topId.toString();
         edgeTarget = id.toString();
+
+        edgePrev = prevParentId;
+        prevParentId = id.toString();
       }
       if (level === 3) {
         nodePosition = { x: parentX + 35, y: childYoffset + 100 };
@@ -130,7 +146,9 @@ const generateLayoutFromData = (data: String) => {
       const edge: Edge = {
         id: id.toString(),
         source: edgeSource,
+        sourceHandle: "source",
         target: edgeTarget,
+        targetHandle: "target",
         type: "smoothstep",
         markerEnd: {
           type: MarkerType.ArrowClosed,
@@ -144,6 +162,29 @@ const generateLayoutFromData = (data: String) => {
         },
       };
       edges.push(edge);
+
+      // Create the edge to the previous parent
+      if (connectParents && edgePrev != "") {
+        const edge: Edge = {
+          id: id.toString(),
+          source: edgePrev,
+          sourceHandle: "prev",
+          target: edgeTarget,
+          targetHandle: "next",
+          type: "bezier",
+          markerEnd: {
+            type: MarkerType.ArrowClosed,
+            width: 20,
+            height: 20,
+            color: "#a3a3a3",
+          },
+          style: {
+            strokeWidth: 2,
+            stroke: "#a3a3a3",
+          },
+        };
+        edges.push(edge);
+      }
     }
   });
 

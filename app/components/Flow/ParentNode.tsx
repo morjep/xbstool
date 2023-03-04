@@ -6,14 +6,18 @@ import Node from "./Node";
 
 const targetHandleStyle: CSSProperties = {};
 const sourceHandleStyle: CSSProperties = { left: 10 };
+const handleStyle: CSSProperties = { top: 12 };
 
 const ParentNode: FC<NodeProps> = ({ data }) => {
   console.log(data);
   return (
     <>
       <Node data={data}>
-        <Handle type="target" position={Position.Top} id="t" style={targetHandleStyle} />
-        <Handle type="source" position={Position.Bottom} id="b" style={sourceHandleStyle} />
+        <Handle type="target" position={Position.Left} id="next" style={handleStyle} />
+        <Handle type="source" position={Position.Right} id="prev" style={handleStyle} />
+
+        <Handle type="target" position={Position.Top} id="target" style={targetHandleStyle} />
+        <Handle type="source" position={Position.Bottom} id="source" style={sourceHandleStyle} />
       </Node>
     </>
   );

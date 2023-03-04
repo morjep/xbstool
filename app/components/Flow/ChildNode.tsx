@@ -10,7 +10,7 @@ const ChildNode: FC<NodeProps> = ({ data }) => {
   return (
     <>
       <Node data={data}>
-        <Handle type="target" position={Position.Left} id="a" style={targetHandleStyle} />
+        <Handle type="target" position={Position.Left} id="target" style={targetHandleStyle} />
       </Node>
     </>
   );

@@ -10,7 +10,7 @@ const TopNode: FC<NodeProps> = ({ data }) => {
   return (
     <>
       <Node data={data}>
-        <Handle type="source" position={Position.Bottom} id="a" style={sourceHandleStyle} />
+        <Handle type="source" position={Position.Bottom} id="source" style={sourceHandleStyle} />
       </Node>
     </>
   );
