@@ -48,8 +48,9 @@ export const loader = async ({ request, params }: LoaderArgs) => {
 
   const { nodes, edges } = generateLayoutFromData(breakdown.data);
 
-  invariant(nodes.length > 0, "No nodes found");
-  invariant(edges.length > 0, "No edges found");
+  if (nodes.length === 0 || edges.length === 0) {
+    return redirect("/data/" + id);
+  }
 
   return json({
     initialNodes: nodes,

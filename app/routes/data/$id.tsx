@@ -1,6 +1,6 @@
 import { json, redirect } from "@remix-run/node"; // or cloudflare/deno
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
-import { useLoaderData, Form, useFetcher } from "@remix-run/react";
+import { useLoaderData, Form, useFetcher, useNavigation } from "@remix-run/react";
 
 import invariant from "tiny-invariant";
 
@@ -9,6 +9,7 @@ import { getBreakdownById, updateBreakdownData } from "~/models/breakdown.server
 import { Navbar } from "~/components/Components/Navbar";
 import debounce from "~/utils/util";
 import { handleAIrequest } from "~/models/ai.server";
+import { useEffect, useRef } from "react";
 
 type LoaderData = {
   id: string;
@@ -43,6 +44,10 @@ export const action = async ({ request }: ActionArgs) => {
     console.log("AI");
     const aiRequest = formData.get("ai") as string;
     data = await handleAIrequest(data, aiRequest);
+
+    // // Delay to show spinner...
+    // data = "testing delay...\n" + data;
+    // await new Promise((res) => setTimeout(res, 1000));
   }
   await updateBreakdownData(id, data as string);
 
@@ -53,6 +58,10 @@ export const action = async ({ request }: ActionArgs) => {
 export default function IdRoute() {
   const { id, name, data } = useLoaderData<LoaderData>();
   const fetcher = useFetcher();
+  const navigation = useNavigation();
+
+  let isRequestingAI = navigation.state === "submitting" || navigation.state === "loading";
+  let formRef = useRef<HTMLFormElement>(null);
 
   const _autoSave = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     fetcher.submit(e.target.form);
@@ -60,10 +69,17 @@ export default function IdRoute() {
 
   const autoSave = debounce((e: React.ChangeEvent<HTMLTextAreaElement>) => _autoSave(e), 500);
 
+  useEffect(() => {
+    if (!isRequestingAI) {
+      formRef.current?.reset();
+    }
+  }, [isRequestingAI]);
+
   return (
     <div>
       <Navbar id={id} name={name} />
-      <Form reloadDocument method="post">
+      {/* <Form reloadDocument method="post">*/}
+      <Form replace method="post" ref={formRef}>
         <div style={{ height: 1024 }}>
           <div className="flex text-center gap-8 justify-center">
             <div className="flex flex-col">
@@ -76,9 +92,13 @@ export default function IdRoute() {
                 className="textarea textarea-bordered textarea-primary bg-base-100"
                 placeholder="Write your request to the AI assistant here."
               />
-
-              <button type="submit" name="action" value="ai" className="btn bg-primary my-4 w-32">
-                Submit to AI
+              <button
+                type="submit"
+                name="action"
+                value="ai"
+                className={"btn bg-primary my-4 w-40" + (isRequestingAI ? " loading" : "")}
+              >
+                {isRequestingAI ? "LOADING" : "SUBMIT TO AI"}
               </button>
             </div>
             <div>

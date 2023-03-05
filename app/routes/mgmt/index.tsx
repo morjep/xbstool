@@ -23,7 +23,7 @@ export default function Index() {
         <div key={project.id}>
           <div className="divider text-lg font-bold">{project.projectName}</div>
 
-          <ul className="menu bg-base-100 w-full rounded-md">
+          <ul className="menu bg-base-100 w-full rounded-xl">
             {breakdowns
               .filter((breakdown: Breakdown) => breakdown.projectId === project.id)
               .map((breakdown: Breakdown) => (

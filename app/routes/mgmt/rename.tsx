@@ -16,23 +16,6 @@ export const loader = async () => {
 
 export const action = async ({ request }: ActionArgs) => {
   const formData = await request.formData();
-  const newProject = formData.get("newProject") as string;
-  const newBreakdown = formData.get("newBreakdown") as string;
-  const selectedProject = formData.get("selectedProject") as string;
-
-  if (newProject) {
-    await createNewProject(newProject);
-    return redirect("/mgmt/");
-  }
-
-  if (newBreakdown && selectedProject) {
-    await getProjectWithName(selectedProject).then((project) => {
-      if (project) {
-        createNewBreakdown(newBreakdown, project.id);
-      }
-    });
-    return redirect("/mgmt/");
-  }
 
   return redirect("/mgmt/");
 };
@@ -42,42 +25,52 @@ export default function NewRoute() {
 
   return (
     <Form method="post">
-      <div className="divider text-lg font-bold">New Project</div>
-      <div className="pt-6 pb-16 flex flex-row">
-        <div className="w-72 px-2">
-          <input
-            type="text"
-            name="newProject"
-            placeholder="Enter name of new project"
-            className="input input-bordered w-full"
-          />
-        </div>
-        <button type="submit" className="btn bg-primary text-primary-content w-32">
-          Create
-        </button>{" "}
-      </div>
-      <div className="divider text-lg font-bold">New Breakdown</div>
+      <div className="divider text-lg font-bold">Rename Project</div>
       <div className="pt-6 pb-16 flex flex-row">
         <div className="pb-4">
           <select className="select select-bordered w-72" name="selectedProject">
             <option disabled selected>
-              Select a project
+              Select project
             </option>
             {projects.map((project) => (
               <option key={project.id}>{project.projectName}</option>
             ))}
           </select>
         </div>
-        <div className="w-72 px-2">
+        <div className="px-4 w-72">
           <input
             type="text"
-            name="newBreakdown"
-            placeholder="Enter name of new breakdown"
+            name="newProjectName"
+            placeholder="Enter new name of project"
             className="input input-bordered w-full"
           />
         </div>
         <button type="submit" className="btn bg-primary text-primary-content w-32">
-          Create
+          Rename
+        </button>{" "}
+      </div>
+      <div className="divider text-lg font-bold">Rename Breakdown</div>
+      <div className="pt-6 pb-16 flex flex-row">
+        <div className="pb-4">
+          <select className="select select-bordered w-72" name="selectedProject">
+            <option disabled selected>
+              Select breakdown
+            </option>
+            {breakdowns.map((breakdown) => (
+              <option key={breakdown.id}>{breakdown.breakdownName}</option>
+            ))}
+          </select>
+        </div>
+        <div className="px-4 w-72">
+          <input
+            type="text"
+            name="newBreakdownName"
+            placeholder="Enter new name of breakdown"
+            className="input input-bordered w-full"
+          />
+        </div>
+        <button type="submit" className="btn bg-primary text-primary-content w-32">
+          Rename
         </button>{" "}
       </div>
     </Form>

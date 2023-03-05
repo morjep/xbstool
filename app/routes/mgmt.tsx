@@ -10,13 +10,23 @@ export default function MgmtRoute() {
         <div className="col-start-1 col-end-1">
           <ul className="menu w-56 font-bold bg-base-200">
             <li>
+              <NavLink to="/mgmt/">
+                <span>My Breakdowns</span>
+              </NavLink>
+            </li>
+            <li>
               <NavLink to="/mgmt/new">
                 <span>New</span>
               </NavLink>
             </li>
             <li>
-              <NavLink to="/mgmt/">
-                <span>My Breakdowns</span>
+              <NavLink to="/mgmt/delete">
+                <span>Delete</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/mgmt/rename">
+                <span>Rename</span>
               </NavLink>
             </li>
           </ul>

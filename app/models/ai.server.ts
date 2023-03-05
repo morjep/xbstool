@@ -14,11 +14,14 @@ const chatCompletion = async (currentContent: string, userRequest: string) => {
       {
         role: "user",
         content: `
-    Please assist me in making work-breakdown structures using the following format:  "
+    Please assist me in making work-breakdown structures using the following rules:  "
     @startWBS // Start of WBS
     * Top level task or item
-    ** Second level task or item
-    *** Third level task or item
+    ** Second level task or item, also known as the parent
+    *** Third level task or item, also known as the child
+    Rule 1: The number of asterisks indicates the level of the task or item.
+    Rule 2: It is forbidden to use four or more asterisks.
+    Rule 3: It must be asterisk and no other character to indicate the level of the task or item.
     @endWBS // End of WBS
     `,
       },
