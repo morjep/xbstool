@@ -17,6 +17,7 @@ model Project {
   updatedAt   DateTime    @updatedAt
   deletedAt   DateTime?
   breakdowns  Breakdown[]
+  deleted     Boolean     @default(false)
 }
 
 model Breakdown {
@@ -30,6 +31,7 @@ model Breakdown {
   autoLayout    Boolean?
   data          String?
   style         Style?
+  deleted       Boolean   @default(false)
 }
 
 model Style {

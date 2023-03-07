@@ -3,7 +3,11 @@ import type { Project } from "@prisma/client";
 
 export async function getAllProjects(): Promise<Project[]> {
   // Get all projects from the database
-  const projects = prisma.project.findMany({});
+  const projects = prisma.project.findMany({
+    where: {
+      deleted: false,
+    },
+  });
 
   // Return the projects
   return projects;
@@ -14,10 +18,26 @@ export async function getProjectWithName(projectName: string): Promise<Project |
   const project = await prisma.project.findFirst({
     where: {
       projectName,
+      deleted: false,
     },
   });
 
   // Return the project
+  return project;
+}
+
+export async function updateProjectName(projectId: string, projectName: string): Promise<Project> {
+  // Update the project with the provided name
+  const project = await prisma.project.update({
+    where: {
+      id: projectId,
+    },
+    data: {
+      projectName,
+    },
+  });
+
+  // Return the updated project
   return project;
 }
 
@@ -30,5 +50,21 @@ export async function createNewProject(projectName: string): Promise<Project> {
   });
 
   // Return the new project
+  return project;
+}
+
+export async function deleteProject(projectId: string): Promise<Project> {
+  // Delete the project with the provided ID
+
+  const project = await prisma.project.update({
+    where: {
+      id: projectId,
+    },
+    data: {
+      deleted: true,
+    },
+  });
+
+  // Return the deleted project
   return project;
 }
