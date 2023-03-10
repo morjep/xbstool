@@ -19,13 +19,13 @@ Rule 4: Use // to add a comment to the individual task or item, i.e. ** Second l
 Rule 5: Any line that starts with anything else than an asterisk is ignored (can have spaces before the asterisk)
 
 There are a number of tags that can be used to indicate the status of the task or item:
-__pb<value>__ = progress bar, where <value> is the percentage of completion, example: __pb50__ means 50% complete
+__pb_<value>__ = progress bar, where <value> is the percentage of completion, example: __pb_50__ means 50% complete
 __is__ = indicator_success
 __iw__ = indicator_warning
 __ie__ = indicator_error
 __due_<value>__ = due date, where <value> is the duedate in any string format, i.e. __due_2020-12-31__ or just __due_now__
 __connect_parents__ can only be set on the top level and means that the parents (second level) will be connected chronologicaly
-Tags are always placed after the task or item with at least a single space before the tag and on the same line (i.e. no new lines before the tag), i.e. ** Second level task or item __pb50__ // This is a comment
+Tags are always placed after the task or item with at least a single space before the tag and on the same line (i.e. no new lines before the tag), i.e. ** Second level task or item __pb_50__ // This is a comment
 `;
 
 const requestMessage = {

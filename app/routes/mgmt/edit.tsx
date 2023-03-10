@@ -55,7 +55,7 @@ export default function EditRoute() {
 
   return (
     <Form method="post">
-      <div className="divider text-lg font-bold">Rename Project</div>
+      <div className="divider text-lg font-bold pt-4">Rename Project</div>
 
       <MgmtContainer>
         <MgmtContainerSelectId

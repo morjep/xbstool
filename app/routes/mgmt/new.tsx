@@ -49,7 +49,7 @@ export default function NewRoute() {
 
   return (
     <Form method="post">
-      <div className="divider text-lg font-bold">New Project</div>
+      <div className="divider text-lg font-bold pt-4">New Project</div>
 
       <MgmtContainer>
         <MgmtContainerInput name="newProject" placeholder="Enter name of new project" />

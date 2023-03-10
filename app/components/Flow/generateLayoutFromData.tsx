@@ -33,6 +33,7 @@ const generateLayoutFromData = (data: String) => {
       const indicator = extractIndicator(content);
       const progressBar = extractProgressBar(content);
       const progressValue = extractProgressValue(content);
+      const est = extractEst(content);
 
       // Only check if we are on the first level (i.e. top level) - remember for subsequent passes
       if (level === 1 && connectParents === false) {
@@ -95,6 +96,7 @@ const generateLayoutFromData = (data: String) => {
             indicator: indicator,
             progressBar: progressBar,
             progressValue: progressValue,
+            est: est,
           },
           position: nodePosition,
           type: nodeType,
@@ -198,14 +200,21 @@ function extractIndicator(line: string): string {
 }
 
 function extractProgressBar(line: string): boolean {
-  const progress = line.match(/__pb.*__/g);
+  const progress = line.match(/__pb_.*__/g);
   const progressBar = progress ? true : false;
   return progressBar;
 }
 
 function extractProgressValue(line: string): string {
-  const progressRegex = /__pb(?<value>\d+)__/g;
+  const progressRegex = /__pb_(?<value>\d+)__/g;
   const match = progressRegex.exec(line);
   const progressValue = match?.groups?.value ?? "0";
   return progressValue;
+}
+
+function extractEst(line: string): string {
+  const estRegex = /__est_(?<est>.*)__/g;
+  const match = estRegex.exec(line);
+  const est = match?.groups?.est ?? "";
+  return est;
 }

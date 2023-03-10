@@ -40,6 +40,12 @@ const Node = ({ data, children }: { data: any; children: any }) => {
           {data.due}
         </span>
       )}
+      {data.est && (
+        <span className="indicator-item indicator-bottom indicator-center badge badge-xs text-xs badge-secondary">
+          {data.est}
+        </span>
+      )}
+
       <Box label={data.label} progressBar={data.progressBar} progressValue={data.progressValue} />
 
       {children}

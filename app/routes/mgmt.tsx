@@ -8,7 +8,7 @@ export default function MgmtRoute() {
       <Navbar name="Breakdowns Home" id="" />
       <div className="grid grid-cols-6 gap-12 bg-base-100">
         <div className="col-start-1 col-end-1 bg-secondary">
-          <ul className="menu w-62 font-bold ">
+          <ul className="menu w-62 px-4 pt-4 font-bold ">
             <li>
               <NavLink to="/mgmt/">
                 <span className="text-secondary-content">My Breakdowns</span>

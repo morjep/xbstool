@@ -19,7 +19,7 @@ export const meta: MetaFunction = () => ({
 
 export default function App() {
   return (
-    <html lang="en" data-theme="dark">
+    <html lang="en" data-theme="corporate">
       <head>
         <Meta />
         <Links />

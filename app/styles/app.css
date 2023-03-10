@@ -2187,6 +2187,15 @@ html {
   border-color: hsl(var(--b1) / var(--tw-border-opacity));
 }
 
+.badge-secondary {
+  --tw-border-opacity: 1;
+  border-color: hsl(var(--s) / var(--tw-border-opacity));
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--s) / var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: hsl(var(--sc) / var(--tw-text-opacity));
+}
+
 .badge-accent {
   --tw-border-opacity: 1;
   border-color: hsl(var(--a) / var(--tw-border-opacity));
@@ -2218,6 +2227,11 @@ html {
   background-color: hsl(var(--er) / var(--tw-bg-opacity));
   --tw-text-opacity: 1;
   color: hsl(var(--erc, var(--nc)) / var(--tw-text-opacity));
+}
+
+.badge-outline.badge-secondary {
+  --tw-text-opacity: 1;
+  color: hsl(var(--s) / var(--tw-text-opacity));
 }
 
 .badge-outline.badge-accent {
@@ -3222,6 +3236,10 @@ html {
   margin-bottom: 1rem;
 }
 
+.mt-4 {
+  margin-top: 1rem;
+}
+
 .inline {
   display: inline;
 }
@@ -3400,6 +3418,16 @@ html {
   padding-bottom: 2rem;
 }
 
+.py-4 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.py-3 {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
 .pb-16 {
   padding-bottom: 4rem;
 }
@@ -3414,6 +3442,14 @@ html {
 
 .pt-8 {
   padding-top: 2rem;
+}
+
+.pt-4 {
+  padding-top: 1rem;
+}
+
+.pt-3 {
+  padding-top: 0.75rem;
 }
 
 .text-center {

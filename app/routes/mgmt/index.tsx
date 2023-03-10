@@ -18,10 +18,12 @@ export default function Index() {
   const { projects, breakdowns } = useLoaderData();
 
   return (
-    <div>
+    <div className="pt-4">
       {projects.map((project: Project) => (
         <div key={project.id}>
-          <div className="divider text-base-content  text-lg font-bold">{project.projectName}</div>
+          <div className="divider text-base-content  text-lg font-bold pt-4">
+            {project.projectName}
+          </div>
 
           <ul className="menu w-full">
             {breakdowns
