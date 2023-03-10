@@ -30,7 +30,7 @@ export async function getBreakdownById(breakdownId: string) {
   });
 }
 
-export async function updateBreakdownData(breakdownId: string, data: string, notes: string) {
+export async function updateBreakdown(breakdownId: string, data: string, notes: string) {
   return prisma.breakdown.update({
     where: { id: breakdownId },
     data: { data, notes },

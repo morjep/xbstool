@@ -4,7 +4,7 @@ import { useLoaderData, Form, useFetcher, useNavigation } from "@remix-run/react
 
 import invariant from "tiny-invariant";
 
-import { getBreakdownById, updateBreakdownData } from "~/models/breakdown.server";
+import { getBreakdownById, updateBreakdown } from "~/models/breakdown.server";
 
 import { Navbar } from "~/components/Components/Navbar";
 import debounce from "~/utils/util";
@@ -55,7 +55,7 @@ export const action = async ({ request }: ActionArgs) => {
   // data = "testing delay...\n" + data;
   // await new Promise((res) => setTimeout(res, 1000));
 
-  await updateBreakdownData(id, data as string, notes as string);
+  await updateBreakdown(id, data as string, notes as string);
 
   return redirect("/data/" + id);
 };
