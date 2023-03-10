@@ -4,7 +4,7 @@ import { useFetcher, useLoaderData } from "@remix-run/react";
 
 import invariant from "tiny-invariant";
 
-import { getBreakdown } from "~/models/breakdown.server";
+import { readBreakdown } from "~/models/breakdown.server";
 
 import { Navbar } from "~/components/Components/Navbar";
 import { createNewStyle, getStyle, updateTheme } from "~/models/style.server";
@@ -52,7 +52,7 @@ type LoaderData = {
 export const loader = async ({ request, params }) => {
   const { id } = params;
   console.log("ID: ", id);
-  const breakdown = await getBreakdown(id);
+  const breakdown = await readBreakdown(id);
 
   invariant(breakdown, "No breakdown found");
   invariant(breakdown.data, "No breakdown data found");

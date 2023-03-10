@@ -10,7 +10,7 @@ import {
   MgmtContainerSelectId,
 } from "~/components/Components/MgmtContainer";
 
-import { newBreakdown, getAllBreakdowns } from "~/models/breakdown.server";
+import { createBreakdown, readAllBreakdowns } from "~/models/breakdown.server";
 import {
   createNewProject,
   getAllProjects,
@@ -36,7 +36,7 @@ export const action = async ({ request }: ActionArgs) => {
   }
 
   if (action === "newBreakdown") {
-    await newBreakdown(newBreakdown_, projectId);
+    await createBreakdown(newBreakdown_, projectId);
   }
 
   return redirect("/mgmt/");

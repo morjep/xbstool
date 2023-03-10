@@ -1,6 +1,16 @@
 import { prisma } from "~/utils/db.server";
 
-export async function getAllBreakdowns() {
+export async function createBreakdown(breakdownName: string, projectId: string) {
+  return prisma.breakdown.create({
+    data: {
+      breakdownName,
+      project: { connect: { id: projectId } },
+      autoLayout: true,
+    },
+  });
+}
+
+export async function readAllBreakdowns() {
   return prisma.breakdown.findMany({
     where: { deleted: false },
     select: {
@@ -12,7 +22,7 @@ export async function getAllBreakdowns() {
   });
 }
 
-export async function getBreakdown(breakdownId: string) {
+export async function readBreakdown(breakdownId: string) {
   return prisma.breakdown.findFirst({
     where: { id: breakdownId },
     select: {
@@ -34,16 +44,6 @@ export async function updateBreakdown(breakdownId: string, data: string, notes: 
   return prisma.breakdown.update({
     where: { id: breakdownId },
     data: { data, notes },
-  });
-}
-
-export async function newBreakdown(breakdownName: string, projectId: string) {
-  return prisma.breakdown.create({
-    data: {
-      breakdownName,
-      project: { connect: { id: projectId } },
-      autoLayout: true,
-    },
   });
 }
 

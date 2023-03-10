@@ -4,11 +4,11 @@ import type { Project, Breakdown } from "@prisma/client";
 
 import invariant from "tiny-invariant";
 import { getAllProjects } from "~/models/project.server";
-import { getAllBreakdowns } from "~/models/breakdown.server";
+import { readAllBreakdowns } from "~/models/breakdown.server";
 
 export const loader = async () => {
   const projects = await getAllProjects();
-  const breakdowns = await getAllBreakdowns();
+  const breakdowns = await readAllBreakdowns();
   invariant(projects, "No projects found");
   invariant(breakdowns, "No breakdowns found");
   return json({ projects, breakdowns });
