@@ -32,6 +32,7 @@ model Breakdown {
   data          String?
   style         Style?
   deleted       Boolean   @default(false)
+  notes         String    @default("")
 }
 
 model Style {

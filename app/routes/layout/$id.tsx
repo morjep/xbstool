@@ -35,6 +35,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   invariant(breakdown, "No breakdown found");
 
   if (breakdown.data === null) {
+    console.log("No data found for breakdown with id: " + id);
     return redirect("/data/" + id);
   }
 
@@ -49,6 +50,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const { nodes, edges } = generateLayoutFromData(breakdown.data);
 
   if (nodes.length === 0 || edges.length === 0) {
+    console.log("No nodes or edges found for breakdown with id: " + id);
     return redirect("/data/" + id);
   }
 
@@ -70,7 +72,7 @@ export default function IdRoute() {
       <div className="px-8 py-8">
         <div data-theme={theme} className="rounded-lg">
           <div style={{ height: 1024 }}>
-            <div className="app bg-base-100 rounded-lg">
+            <div className="app rounded-lg">
               <Flow initialNodes={initialNodes} initialEdges={initialEdges} />
             </div>
           </div>

@@ -20,6 +20,7 @@ export async function getBreakdownById(breakdownId: string) {
       breakdownName: true,
       projectId: true,
       data: true,
+      notes: true,
       style: {
         select: {
           theme: true,
@@ -41,10 +42,10 @@ export async function getBreakdownByName(breakdownName: string) {
   });
 }
 
-export async function updateBreakdownData(breakdownId: string, data: string) {
+export async function updateBreakdownData(breakdownId: string, data: string, notes: string) {
   return prisma.breakdown.update({
     where: { id: breakdownId },
-    data: { data },
+    data: { data, notes },
   });
 }
 

@@ -21,9 +21,9 @@ export default function Index() {
     <div>
       {projects.map((project: Project) => (
         <div key={project.id}>
-          <div className="divider text-lg font-bold">{project.projectName}</div>
+          <div className="divider text-base-content  text-lg font-bold">{project.projectName}</div>
 
-          <ul className="menu bg-base-100 w-full rounded-xl">
+          <ul className="menu w-full">
             {breakdowns
               .filter((breakdown: Breakdown) => breakdown.projectId === project.id)
               .sort((a, b) => {
@@ -32,7 +32,7 @@ export default function Index() {
               .map((breakdown: Breakdown) => (
                 <li key={breakdown.id} className="py-2">
                   <Link to={`/layout/${breakdown.id}`}>
-                    <span className="text-secondary-content">{breakdown.breakdownName} </span>
+                    <span className="text-base-content">{breakdown.breakdownName} </span>
                   </Link>
                 </li>
               ))}

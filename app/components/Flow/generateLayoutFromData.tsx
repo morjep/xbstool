@@ -156,13 +156,11 @@ export default generateLayoutFromData;
 // Utility functions below here - hoisted to the top of the file
 
 function getWbsLines(data: String) {
-  const regex = /@startwbs([\s\S]*?)@endwbs/g;
-  const match = regex.exec(data);
-
-  if (match) {
-    const wbsLines = match[1].trim().split("\n");
+  if (data) {
+    const wbsLines = data.trim().split("\n");
     return wbsLines;
   } else {
+    console.log("No WBS found");
     return [];
   }
 }

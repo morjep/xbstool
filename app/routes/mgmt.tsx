@@ -6,28 +6,28 @@ export default function MgmtRoute() {
   return (
     <div>
       <Navbar name="Breakdowns Home" id="" />
-      <div className="grid grid-cols-6 gap-12 pt-8 px-8 bg-base-200">
-        <div className="col-start-1 col-end-1">
-          <ul className="menu w-56 font-bold bg-base-200 ">
+      <div className="grid grid-cols-6 gap-12 bg-base-100">
+        <div className="col-start-1 col-end-1 bg-secondary">
+          <ul className="menu w-62 font-bold ">
             <li>
               <NavLink to="/mgmt/">
-                <span>My Breakdowns</span>
+                <span className="text-secondary-content">My Breakdowns</span>
               </NavLink>
             </li>
             <li>
               <NavLink to="/mgmt/new">
-                <span>New</span>
+                <span className="text-secondary-content">New</span>
               </NavLink>
             </li>
             <li>
               <NavLink to="/mgmt/edit">
-                <span>Edit</span>
+                <span className="text-secondary-content">Edit</span>
               </NavLink>
             </li>
           </ul>
         </div>
 
-        <div className="col-start-2 col-end-6 max-h-[60rem] overflow-auto">
+        <div className="col-start-2 col-end-6 h-screen overflow-auto">
           <Outlet />
         </div>
       </div>
