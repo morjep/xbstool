@@ -13,13 +13,13 @@ import {
 import { createBreakdown, readAllBreakdowns } from "~/models/breakdown.server";
 import {
   createProject,
-  getAllProjects,
-  getProject,
+  readAllProjects,
+  readProject,
   getProjectWithName,
 } from "~/models/project.server";
 
 export const loader = async () => {
-  const projects = await getAllProjects();
+  const projects = await readAllProjects();
   invariant(projects, "No projects found");
   return json({ projects });
 };

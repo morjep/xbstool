@@ -10,10 +10,10 @@ import {
   MgmtContainerSelectId,
 } from "~/components/Components/MgmtContainer";
 import { deleteBreakdown, readAllBreakdowns, updateBreakdownName } from "~/models/breakdown.server";
-import { deleteProject, getAllProjects, updateProjectName } from "~/models/project.server";
+import { deleteProject, readAllProjects, updateProjectName } from "~/models/project.server";
 
 export const loader = async () => {
-  const projects = await getAllProjects();
+  const projects = await readAllProjects();
   const breakdowns = await readAllBreakdowns();
   invariant(projects, "No projects found");
   invariant(breakdowns, "No breakdowns found");

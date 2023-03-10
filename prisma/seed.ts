@@ -1,8 +1,8 @@
-import { getAllProjects, createProject } from "~/models/project.server";
+import { readAllProjects, createProject } from "~/models/project.server";
 import { readAllBreakdowns, createBreakdown, updateBreakdown } from "~/models/breakdown.server";
 
 function log() {
-  getAllProjects().then((projects) => {
+  readAllProjects().then((projects) => {
     console.log(projects);
   });
   readAllBreakdowns().then((breakdown) => {

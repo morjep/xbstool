@@ -3,11 +3,11 @@ import { Link, useLoaderData } from "@remix-run/react";
 import type { Project, Breakdown } from "@prisma/client";
 
 import invariant from "tiny-invariant";
-import { getAllProjects } from "~/models/project.server";
+import { readAllProjects } from "~/models/project.server";
 import { readAllBreakdowns } from "~/models/breakdown.server";
 
 export const loader = async () => {
-  const projects = await getAllProjects();
+  const projects = await readAllProjects();
   const breakdowns = await readAllBreakdowns();
   invariant(projects, "No projects found");
   invariant(breakdowns, "No breakdowns found");

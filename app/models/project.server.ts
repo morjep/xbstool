@@ -14,7 +14,7 @@ export async function createProject(projectName: string): Promise<Project> {
   return project;
 }
 
-export async function getAllProjects(): Promise<Project[]> {
+export async function readAllProjects(): Promise<Project[]> {
   // Get all projects from the database
   const projects = prisma.project.findMany({
     where: {
@@ -26,11 +26,11 @@ export async function getAllProjects(): Promise<Project[]> {
   return projects;
 }
 
-export async function getProjectWithName(projectName: string): Promise<Project | null> {
-  // Get the project with the provided name
+export async function readProject(projectId: string): Promise<Project | null> {
+  // Get the project with the provided ID
   const project = await prisma.project.findFirst({
     where: {
-      projectName,
+      id: projectId,
       deleted: false,
     },
   });
@@ -39,11 +39,11 @@ export async function getProjectWithName(projectName: string): Promise<Project |
   return project;
 }
 
-export async function getProject(projectId: string): Promise<Project | null> {
-  // Get the project with the provided ID
+export async function getProjectWithName(projectName: string): Promise<Project | null> {
+  // Get the project with the provided name
   const project = await prisma.project.findFirst({
     where: {
-      id: projectId,
+      projectName,
       deleted: false,
     },
   });
