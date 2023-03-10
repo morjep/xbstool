@@ -1,6 +1,6 @@
 import { prisma } from "~/utils/db.server";
 
-export async function createNewStyle(breakdownId: string) {
+export async function createStyle(breakdownId: string) {
   return prisma.style.create({
     data: {
       breakdown: { connect: { id: breakdownId } },
@@ -8,14 +8,7 @@ export async function createNewStyle(breakdownId: string) {
   });
 }
 
-export async function updateTheme(breakdownId: string, theme: string) {
-  return prisma.style.update({
-    where: { breakdownId },
-    data: { theme },
-  });
-}
-
-export async function getStyle(breakdownId: string) {
+export async function readStyle(breakdownId: string) {
   return prisma.style.findFirst({
     where: { breakdownId },
     select: {
@@ -23,5 +16,12 @@ export async function getStyle(breakdownId: string) {
       arrows: true,
       shadows: true,
     },
+  });
+}
+
+export async function updateStyleTheme(breakdownId: string, theme: string) {
+  return prisma.style.update({
+    where: { breakdownId },
+    data: { theme },
   });
 }

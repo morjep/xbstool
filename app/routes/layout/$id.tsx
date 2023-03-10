@@ -15,7 +15,7 @@ import { readBreakdown } from "~/models/breakdown.server";
 
 import generateLayoutFromData from "~/components/Flow/generateLayoutFromData";
 import { Navbar } from "~/components/Components/Navbar";
-import { createNewStyle } from "~/models/style.server";
+import { createStyle } from "~/models/style.server";
 
 type LoaderData = {
   initialNodes: Node[];
@@ -40,7 +40,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   }
 
   if (breakdown.style === null) {
-    await createNewStyle(id);
+    await createStyle(id);
     console.log(
       "Created new style for breakdown with id: " + id + " and name: " + breakdown.breakdownName
     );

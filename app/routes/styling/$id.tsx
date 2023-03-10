@@ -7,7 +7,7 @@ import invariant from "tiny-invariant";
 import { readBreakdown } from "~/models/breakdown.server";
 
 import { Navbar } from "~/components/Components/Navbar";
-import { createNewStyle, getStyle, updateTheme } from "~/models/style.server";
+import { createStyle, readStyle, updateStyleTheme } from "~/models/style.server";
 
 const daisyThemes = [
   "light",
@@ -58,7 +58,7 @@ export const loader = async ({ request, params }) => {
   invariant(breakdown.data, "No breakdown data found");
 
   if (breakdown.style === null) {
-    await createNewStyle(id);
+    await createStyle(id);
     console.log(
       "Created new style for breakdown with id: " + id + " and name: " + breakdown.breakdownName
     );
@@ -78,7 +78,7 @@ export const action = async ({ request }: ActionArgs) => {
   const url = new URL(request.url);
   const id = url.pathname.replace(/\/styling\//g, "");
   const theme = formData.get("theme") as string;
-  await updateTheme(id, theme as string);
+  await updateStyleTheme(id, theme as string);
 
   return redirect("/styling/" + id);
 };
