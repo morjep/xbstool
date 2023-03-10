@@ -29,34 +29,38 @@ export const MgmtContainerButton = ({
   buttonName: string;
 }) => {
   return (
-    <button
-      type="submit"
-      className="btn bg-primary text-primary-content w-32"
-      name="action"
-      value={action}
-    >
-      {buttonName}
-    </button>
+    <div className="px-2">
+      <button
+        type="submit"
+        className="btn bg-primary text-primary-content w-32"
+        name="action"
+        value={action}
+      >
+        {buttonName}
+      </button>
+    </div>
   );
 };
 
-export const MgmtContainerSelect = ({
+export const MgmtContainerSelectId = ({
   name,
   placeholder,
   options,
 }: {
   name: string;
   placeholder: string;
-  options: string[];
+  options: any;
 }) => {
   return (
-    <div className="px-4">
+    <div className="px-2">
       <select className="select select-bordered w-72" name={name}>
         <option disabled selected>
           {placeholder}
         </option>
         {options.map((option) => (
-          <option key={option}>{option}</option>
+          <option key={option.id} value={option.id}>
+            {option.name}
+          </option>
         ))}
       </select>
     </div>

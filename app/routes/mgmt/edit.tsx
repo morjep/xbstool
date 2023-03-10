@@ -7,22 +7,10 @@ import {
   MgmtContainer,
   MgmtContainerButton,
   MgmtContainerInput,
-  MgmtContainerSelect,
+  MgmtContainerSelectId,
 } from "~/components/Components/MgmtContainer";
-import { MgmtSelect } from "~/components/Components/MgmtSelect";
-import { MgmtSelectInput } from "~/components/Components/MgmtSelectInput";
-import {
-  deleteBreakdown,
-  getAllBreakdowns,
-  getBreakdownByName,
-  updateBreakdownName,
-} from "~/models/breakdown.server";
-import {
-  deleteProject,
-  getAllProjects,
-  getProjectWithName,
-  updateProjectName,
-} from "~/models/project.server";
+import { deleteBreakdown, getAllBreakdowns, updateBreakdownName } from "~/models/breakdown.server";
+import { deleteProject, getAllProjects, updateProjectName } from "~/models/project.server";
 
 export const loader = async () => {
   const projects = await getAllProjects();
@@ -37,41 +25,26 @@ export const action = async ({ request }: ActionArgs) => {
   const action = formData.get("action") as string;
 
   if (action === "newNameProject") {
-    const selectedProject = formData.get("selectedProject") as string;
+    const projectId = formData.get("projectId") as string;
     const newNameProject = formData.get("newNameProject") as string;
-    await getProjectWithName(selectedProject).then((project) => {
-      if (project) {
-        updateProjectName(project.id, newNameProject);
-      }
-    });
+    await updateProjectName(projectId, newNameProject);
   }
 
   if (action === "newNameBreakdown") {
-    const selectedBreakdown = formData.get("selectedBreakdown") as string;
+    const breakdownId = formData.get("breakdownId") as string;
     const newNameBreakdown = formData.get("newNameBreakdown") as string;
-    await getBreakdownByName(selectedBreakdown).then((breakdown) => {
-      if (breakdown) {
-        updateBreakdownName(breakdown.id, newNameBreakdown);
-      }
-    });
+    console.log(breakdownId, newNameBreakdown);
+    await updateBreakdownName(breakdownId, newNameBreakdown);
   }
 
   if (action === "deleteProject") {
-    const selectedProject = formData.get("selectedProject") as string;
-    await getProjectWithName(selectedProject).then((project) => {
-      if (project) {
-        deleteProject(project.id);
-      }
-    });
+    const projectId = formData.get("projectId") as string;
+    await deleteProject(projectId);
   }
 
   if (action === "deleteBreakdown") {
-    const selectedBreakdown = formData.get("selectedBreakdown") as string;
-    await getBreakdownByName(selectedBreakdown).then((breakdown) => {
-      if (breakdown) {
-        deleteBreakdown(breakdown.id);
-      }
-    });
+    const breakdownId = formData.get("breakdownId") as string;
+    await deleteBreakdown(breakdownId);
   }
 
   return redirect("/mgmt/");
@@ -83,11 +56,16 @@ export default function EditRoute() {
   return (
     <Form method="post">
       <div className="divider text-lg font-bold">Rename Project</div>
+
       <MgmtContainer>
-        <MgmtContainerSelect
-          name="selectedProject"
+        <MgmtContainerSelectId
+          name="projectId"
           placeholder="Select a project"
-          options={projects.map((project) => project.projectName).sort()}
+          options={projects
+            .map((project) => {
+              return { name: project.projectName, id: project.id };
+            })
+            .sort()}
         />
         <MgmtContainerInput name="newNameProject" placeholder="Enter new name of project" />
         <MgmtContainerButton action="newNameProject" buttonName="Rename" />
@@ -95,32 +73,67 @@ export default function EditRoute() {
 
       <div className="divider text-lg font-bold">Rename Breakdown</div>
 
-      <MgmtSelectInput
-        name="selectedBreakdown"
-        nameInput="newNameBreakdown"
-        placeholderSelect="Select a breakdown"
-        placeholderInput="Enter name of new breakdown"
-        action="newNameBreakdown"
-        options={breakdowns.map((breakdown) => breakdown.breakdownName).sort()}
-        buttonName="Rename"
-      />
+      <MgmtContainer>
+        <MgmtContainerSelectId
+          name="breakdownId"
+          placeholder="Select a breakdown"
+          options={breakdowns
+            .map((breakdown) => {
+              const p = projects.find((project) => project.id === breakdown.projectId);
+              return {
+                name: p.projectName + ":  " + breakdown.breakdownName,
+                // name: breakdown.breakdownName,
+                id: breakdown.id,
+                sortName: p.projectName,
+                // sortName: breakdown.breakdownName,
+              };
+            })
+            .sort((a, b) => {
+              return a.sortName.localeCompare(b.sortName);
+            })}
+        />
+        <MgmtContainerInput name="newNameBreakdown" placeholder="Enter new name of breakdown" />
+        <MgmtContainerButton action="newNameBreakdown" buttonName="Rename" />
+      </MgmtContainer>
+
       <div className="divider text-lg font-bold">Delete Project</div>
-      <MgmtSelect
-        name="selectedProject"
-        placeholderSelect="Select a project"
-        action="deleteProject"
-        options={projects.map((project) => project.projectName).sort()}
-        buttonName="Delete"
-      />
+
+      <MgmtContainer>
+        <MgmtContainerSelectId
+          name="projectId"
+          placeholder="Select a project"
+          options={projects
+            .map((project) => {
+              return { name: project.projectName, id: project.id };
+            })
+            .sort()}
+        />
+        <MgmtContainerButton action="deleteProject" buttonName="Delete" />
+      </MgmtContainer>
 
       <div className="divider text-lg font-bold">Delete Breakdown</div>
-      <MgmtSelect
-        name="selectedBreakdown"
-        placeholderSelect="Select a breakdown"
-        action="deleteBreakdown"
-        options={breakdowns.map((breakdown) => breakdown.breakdownName).sort()}
-        buttonName="Delete"
-      />
+
+      <MgmtContainer>
+        <MgmtContainerSelectId
+          name="breakdownId"
+          placeholder="Select a breakdown"
+          options={breakdowns
+            .map((breakdown) => {
+              const p = projects.find((project) => project.id === breakdown.projectId);
+              return {
+                name: p.projectName + ":  " + breakdown.breakdownName,
+                // name: breakdown.breakdownName,
+                id: breakdown.id,
+                sortName: p.projectName,
+                // sortName: breakdown.breakdownName,
+              };
+            })
+            .sort((a, b) => {
+              return a.sortName.localeCompare(b.sortName);
+            })}
+        />
+        <MgmtContainerButton action="deleteBreakdown" buttonName="Delete" />
+      </MgmtContainer>
     </Form>
   );
 }

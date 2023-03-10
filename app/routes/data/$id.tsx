@@ -67,7 +67,7 @@ export default function IdRoute() {
     fetcher.submit(e.target.form);
   };
 
-  const autoSave = debounce((e: React.ChangeEvent<HTMLTextAreaElement>) => _autoSave(e), 500);
+  const autoSave = debounce((e: React.ChangeEvent<HTMLTextAreaElement>) => _autoSave(e), 1500);
 
   useEffect(() => {
     if (!isRequestingAI) {

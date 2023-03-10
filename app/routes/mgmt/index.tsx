@@ -26,6 +26,9 @@ export default function Index() {
           <ul className="menu bg-base-100 w-full rounded-xl">
             {breakdowns
               .filter((breakdown: Breakdown) => breakdown.projectId === project.id)
+              .sort((a, b) => {
+                return a.breakdownName.localeCompare(b.breakdownName);
+              })
               .map((breakdown: Breakdown) => (
                 <li key={breakdown.id} className="py-2">
                   <Link to={`/layout/${breakdown.id}`}>

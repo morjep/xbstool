@@ -8,11 +8,17 @@ import {
   MgmtContainerButton,
   MgmtContainerInput,
   MgmtContainerSelect,
+  MgmtContainerSelectId,
 } from "~/components/Components/MgmtContainer";
 import { MgmtInput } from "~/components/Components/MgmtInput";
 import { MgmtSelectInput } from "~/components/Components/MgmtSelectInput";
 import { createNewBreakdown, getAllBreakdowns } from "~/models/breakdown.server";
-import { createNewProject, getAllProjects, getProjectWithName } from "~/models/project.server";
+import {
+  createNewProject,
+  getAllProjects,
+  getProject,
+  getProjectWithName,
+} from "~/models/project.server";
 
 export const loader = async () => {
   const projects = await getAllProjects();
@@ -25,18 +31,14 @@ export const action = async ({ request }: ActionArgs) => {
   const action = formData.get("action") as string;
   const newProject = formData.get("newProject") as string;
   const newBreakdown = formData.get("newBreakdown") as string;
-  const selectedProject = formData.get("selectedProject") as string;
+  const projectId = formData.get("projectId") as string;
 
   if (action === "newProject") {
     await createNewProject(newProject);
   }
 
   if (action === "newBreakdown") {
-    await getProjectWithName(selectedProject).then((project) => {
-      if (project) {
-        createNewBreakdown(newBreakdown, project.id);
-      }
-    });
+    await createNewBreakdown(newBreakdown, projectId);
   }
 
   return redirect("/mgmt/");
@@ -57,13 +59,17 @@ export default function NewRoute() {
       <div className="divider text-lg font-bold">New Breakdown</div>
 
       <MgmtContainer>
-        <MgmtContainerSelect
-          name="selectedProject"
+        <MgmtContainerSelectId
+          name="projectId"
           placeholder="Select a project"
-          options={projects.map((project) => project.projectName).sort()}
+          options={projects
+            .map((project) => {
+              return { name: project.projectName, id: project.id };
+            })
+            .sort()}
         />
         <MgmtContainerInput name="newBreakdown" placeholder="Enter name of new breakdown" />
-        <MgmtContainerButton action="newProject" buttonName="Create" />
+        <MgmtContainerButton action="newBreakdown" buttonName="Create" />
       </MgmtContainer>
     </Form>
   );
