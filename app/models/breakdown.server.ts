@@ -12,7 +12,7 @@ export async function getAllBreakdowns() {
   });
 }
 
-export async function getBreakdownById(breakdownId: string) {
+export async function getBreakdown(breakdownId: string) {
   return prisma.breakdown.findFirst({
     where: { id: breakdownId },
     select: {
@@ -37,7 +37,7 @@ export async function updateBreakdown(breakdownId: string, data: string, notes: 
   });
 }
 
-export async function createNewBreakdown(breakdownName: string, projectId: string) {
+export async function newBreakdown(breakdownName: string, projectId: string) {
   return prisma.breakdown.create({
     data: {
       breakdownName,

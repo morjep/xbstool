@@ -4,7 +4,7 @@ import { useLoaderData, Form, useFetcher, useNavigation } from "@remix-run/react
 
 import invariant from "tiny-invariant";
 
-import { getBreakdownById, updateBreakdown } from "~/models/breakdown.server";
+import { getBreakdown, updateBreakdown } from "~/models/breakdown.server";
 
 import { Navbar } from "~/components/Components/Navbar";
 import debounce from "~/utils/util";
@@ -23,7 +23,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const { id } = params;
   invariant(id, "No ID provided");
   invariant(typeof id === "string", "ID must be a string");
-  const breakdown = await getBreakdownById(id);
+  const breakdown = await getBreakdown(id);
 
   invariant(breakdown, "No breakdown found");
 

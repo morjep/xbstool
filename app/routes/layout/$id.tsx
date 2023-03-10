@@ -11,7 +11,7 @@ import { useLoaderData } from "@remix-run/react";
 
 import invariant from "tiny-invariant";
 
-import { getBreakdownById } from "~/models/breakdown.server";
+import { getBreakdown } from "~/models/breakdown.server";
 
 import generateLayoutFromData from "~/components/Flow/generateLayoutFromData";
 import { Navbar } from "~/components/Components/Navbar";
@@ -30,7 +30,7 @@ export const loader = async ({ request, params }: LoaderArgs) => {
   const { id } = params;
   invariant(id, "No id found");
   invariant(typeof id === "string", "Id is not a string");
-  const breakdown = await getBreakdownById(id);
+  const breakdown = await getBreakdown(id);
 
   invariant(breakdown, "No breakdown found");
 

@@ -1,5 +1,5 @@
 import { getAllProjects, createNewProject } from "~/models/project.server";
-import { getAllBreakdowns, createNewBreakdown, updateBreakdown } from "~/models/breakdown.server";
+import { getAllBreakdowns, newBreakdown, updateBreakdown } from "~/models/breakdown.server";
 
 function log() {
   getAllProjects().then((projects) => {
@@ -17,7 +17,7 @@ async function seed() {
   console.log("Seeding begun!");
 
   let project = await createNewProject("Test project");
-  let breakdown = await createNewBreakdown("Test breakdown", project.id);
+  let breakdown = await newBreakdown("Test breakdown", project.id);
   await updateBreakdown(
     breakdown.id,
     `* Test task

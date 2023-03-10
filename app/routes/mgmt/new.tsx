@@ -7,12 +7,10 @@ import {
   MgmtContainer,
   MgmtContainerButton,
   MgmtContainerInput,
-  MgmtContainerSelect,
   MgmtContainerSelectId,
 } from "~/components/Components/MgmtContainer";
-import { MgmtInput } from "~/components/Components/MgmtInput";
-import { MgmtSelectInput } from "~/components/Components/MgmtSelectInput";
-import { createNewBreakdown, getAllBreakdowns } from "~/models/breakdown.server";
+
+import { newBreakdown, getAllBreakdowns } from "~/models/breakdown.server";
 import {
   createNewProject,
   getAllProjects,
@@ -30,7 +28,7 @@ export const action = async ({ request }: ActionArgs) => {
   const formData = await request.formData();
   const action = formData.get("action") as string;
   const newProject = formData.get("newProject") as string;
-  const newBreakdown = formData.get("newBreakdown") as string;
+  const newBreakdown_ = formData.get("newBreakdown") as string;
   const projectId = formData.get("projectId") as string;
 
   if (action === "newProject") {
@@ -38,7 +36,7 @@ export const action = async ({ request }: ActionArgs) => {
   }
 
   if (action === "newBreakdown") {
-    await createNewBreakdown(newBreakdown, projectId);
+    await newBreakdown(newBreakdown_, projectId);
   }
 
   return redirect("/mgmt/");
