@@ -39,19 +39,6 @@ export async function readProject(projectId: string): Promise<Project | null> {
   return project;
 }
 
-export async function getProjectWithName(projectName: string): Promise<Project | null> {
-  // Get the project with the provided name
-  const project = await prisma.project.findFirst({
-    where: {
-      projectName,
-      deleted: false,
-    },
-  });
-
-  // Return the project
-  return project;
-}
-
 export async function updateProjectName(projectId: string, projectName: string): Promise<Project> {
   // Update the project with the provided name
   const project = await prisma.project.update({
