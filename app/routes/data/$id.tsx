@@ -8,7 +8,7 @@ import { readBreakdown, updateBreakdown } from "~/models/breakdown.server";
 
 import { Navbar } from "~/components/Components/Navbar";
 import debounce from "~/utils/util";
-import { getAIreview, handleAIrequest } from "~/models/ai.server";
+import { handleAIreview, handleAIrequest } from "~/models/ai.server";
 import { useEffect, useRef } from "react";
 
 type LoaderData = {
@@ -48,7 +48,7 @@ export const action = async ({ request }: ActionArgs) => {
     data = await handleAIrequest(data, notes, userRequestToAI);
   }
   if (action == "aiReview") {
-    data = await getAIreview(data, notes);
+    data = await handleAIreview(data, notes);
   }
 
   // // Delay to show spinner...

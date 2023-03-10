@@ -76,7 +76,7 @@ export async function handleAIrequest(data: string, notes: string, aiRequest: st
   return newData;
 }
 
-export async function getAIreview(data: string, notes: string) {
+export async function handleAIreview(data: string, notes: string) {
   console.log("AI request: " + reviewRequest);
   console.log("Data: " + data);
   const newData = await chatCompletion(data, notes, reviewMessage, reviewRequest);
