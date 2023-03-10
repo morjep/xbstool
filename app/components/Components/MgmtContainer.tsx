@@ -42,6 +42,13 @@ export const MgmtContainerButton = ({
   );
 };
 
+// option is an object with id and name
+// options is an array of option objects
+export interface Option {
+  id: string;
+  name: string;
+}
+
 export const MgmtContainerSelectId = ({
   name,
   placeholder,
@@ -49,7 +56,7 @@ export const MgmtContainerSelectId = ({
 }: {
   name: string;
   placeholder: string;
-  options: any;
+  options: Option[];
 }) => {
   return (
     <div className="px-2">

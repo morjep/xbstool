@@ -1,4 +1,4 @@
-import type { ActionArgs } from "@remix-run/node";
+import type { ActionArgs, ActionFunction, LoaderFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
@@ -11,16 +11,22 @@ import {
 } from "~/components/Components/MgmtContainer";
 import { deleteBreakdown, readAllBreakdowns, updateBreakdownName } from "~/models/breakdown.server";
 import { deleteProject, readAllProjects, updateProjectName } from "~/models/project.server";
+import type { Project, Breakdown } from "@prisma/client";
 
-export const loader = async () => {
+type LoaderData = {
+  projects: Project[];
+  breakdowns: Breakdown[];
+};
+
+export const loader: LoaderFunction = async () => {
   const projects = await readAllProjects();
   const breakdowns = await readAllBreakdowns();
   invariant(projects, "No projects found");
   invariant(breakdowns, "No breakdowns found");
-  return json({ projects, breakdowns });
+  return json<LoaderData>({ projects, breakdowns });
 };
 
-export const action = async ({ request }: ActionArgs) => {
+export const action: ActionFunction = async ({ request }: ActionArgs) => {
   const formData = await request.formData();
   const action = formData.get("action") as string;
 
@@ -51,7 +57,7 @@ export const action = async ({ request }: ActionArgs) => {
 };
 
 export default function EditRoute() {
-  const { projects, breakdowns } = useLoaderData();
+  const { projects, breakdowns } = useLoaderData<LoaderData>();
 
   return (
     <Form method="post">
@@ -80,12 +86,11 @@ export default function EditRoute() {
           options={breakdowns
             .map((breakdown) => {
               const p = projects.find((project) => project.id === breakdown.projectId);
+              const name = p ? p.projectName : "No project";
               return {
-                name: p.projectName + ":  " + breakdown.breakdownName,
-                // name: breakdown.breakdownName,
+                name: name + ":  " + breakdown.breakdownName,
                 id: breakdown.id,
-                sortName: p.projectName,
-                // sortName: breakdown.breakdownName,
+                sortName: name,
               };
             })
             .sort((a, b) => {
@@ -120,12 +125,11 @@ export default function EditRoute() {
           options={breakdowns
             .map((breakdown) => {
               const p = projects.find((project) => project.id === breakdown.projectId);
+              const name = p ? p.projectName : "No project";
               return {
-                name: p.projectName + ":  " + breakdown.breakdownName,
-                // name: breakdown.breakdownName,
+                name: name + ":  " + breakdown.breakdownName,
                 id: breakdown.id,
-                sortName: p.projectName,
-                // sortName: breakdown.breakdownName,
+                sortName: name,
               };
             })
             .sort((a, b) => {

@@ -69,10 +69,10 @@ const chatCompletion = async (
   return completion.data.choices[0].message.content;
 };
 
-export async function handleAIrequest(data: string, notes: string, aiRequest: string) {
-  console.log("AI request: " + aiRequest);
+export async function handleAIrequest(data: string, notes: string, userRequest: string) {
+  console.log("AI request: " + userRequest);
   console.log("Data: " + data);
-  const newData = await chatCompletion(data, notes, requestMessage, aiRequest);
+  const newData = await chatCompletion(data, notes, requestMessage, userRequest);
   return newData;
 }
 

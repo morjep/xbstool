@@ -13,12 +13,12 @@ export async function createBreakdown(breakdownName: string, projectId: string) 
 export async function readAllBreakdowns() {
   return prisma.breakdown.findMany({
     where: { deleted: false },
-    select: {
-      id: true,
-      breakdownName: true,
-      projectId: true,
-      data: true,
-    },
+    // select: {
+    //   id: true,
+    //   breakdownName: true,
+    //   projectId: true,
+    //   data: true,
+    // },
   });
 }
 

@@ -1,4 +1,4 @@
-import type { ActionArgs } from "@remix-run/node";
+import type { ActionArgs, LoaderFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
@@ -12,11 +12,16 @@ import {
 
 import { createBreakdown } from "~/models/breakdown.server";
 import { createProject, readAllProjects } from "~/models/project.server";
+import type { Project } from "@prisma/client";
 
-export const loader = async () => {
+type LoaderData = {
+  projects: Project[];
+};
+
+export const loader: LoaderFunction = async () => {
   const projects = await readAllProjects();
   invariant(projects, "No projects found");
-  return json({ projects });
+  return json<LoaderData>({ projects });
 };
 
 export const action = async ({ request }: ActionArgs) => {
@@ -38,7 +43,7 @@ export const action = async ({ request }: ActionArgs) => {
 };
 
 export default function NewRoute() {
-  const { projects } = useLoaderData();
+  const { projects } = useLoaderData<LoaderData>();
 
   return (
     <Form method="post">
