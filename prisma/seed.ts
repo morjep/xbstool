@@ -2,7 +2,7 @@ import { getAllProjects, createNewProject } from "~/models/project.server";
 import {
   getAllBreakdowns,
   createNewBreakdown,
-  addDataToBreakdown,
+  updateBreakdownData,
 } from "~/models/breakdown.server";
 
 function log() {
@@ -22,7 +22,7 @@ async function seed() {
 
   let project = await createNewProject("Test project");
   let breakdown = await createNewBreakdown("Test breakdown", project.id);
-  await addDataToBreakdown(
+  await updateBreakdownData(
     breakdown.id,
     `* Test task
   ** Test sub task
@@ -30,7 +30,8 @@ async function seed() {
   ** Test sub task 2
   *** Test sub sub task 2
   *** Test sub sub task 3
-    `
+    `,
+    "Test notes"
   );
 
   console.log("Seeding complete!");

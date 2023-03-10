@@ -47,13 +47,6 @@ export async function createNewBreakdown(breakdownName: string, projectId: strin
   });
 }
 
-export async function addDataToBreakdown(breakdownId: string, data: string) {
-  return prisma.breakdown.update({
-    where: { id: breakdownId },
-    data: { data },
-  });
-}
-
 export async function updateBreakdownName(breakdownId: string, breakdownName: string) {
   return prisma.breakdown.update({
     where: { id: breakdownId },
