@@ -37,18 +37,6 @@ export async function updateBreakdownData(breakdownId: string, data: string, not
   });
 }
 
-export async function getBreakdownByProjectAndName(projectId: string, breakdownName: string) {
-  return prisma.breakdown.findFirst({
-    where: { projectId, breakdownName },
-    select: {
-      id: true,
-      breakdownName: true,
-      projectId: true,
-      data: true,
-    },
-  });
-}
-
 export async function createNewBreakdown(breakdownName: string, projectId: string) {
   return prisma.breakdown.create({
     data: {
