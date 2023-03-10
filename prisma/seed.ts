@@ -1,4 +1,4 @@
-import { getAllProjects, createNewProject } from "~/models/project.server";
+import { getAllProjects, createProject } from "~/models/project.server";
 import { readAllBreakdowns, createBreakdown, updateBreakdown } from "~/models/breakdown.server";
 
 function log() {
@@ -16,7 +16,7 @@ function log() {
 async function seed() {
   console.log("Seeding begun!");
 
-  let project = await createNewProject("Test project");
+  let project = await createProject("Test project");
   let breakdown = await createBreakdown("Test breakdown", project.id);
   await updateBreakdown(
     breakdown.id,

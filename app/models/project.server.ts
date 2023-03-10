@@ -2,6 +2,18 @@ import { prisma } from "~/utils/db.server";
 import type { Project } from "@prisma/client";
 import { deleteBreakdown } from "./breakdown.server";
 
+export async function createProject(projectName: string): Promise<Project> {
+  // Create a new project with the provided name
+  const project = await prisma.project.create({
+    data: {
+      projectName,
+    },
+  });
+
+  // Return the new project
+  return project;
+}
+
 export async function getAllProjects(): Promise<Project[]> {
   // Get all projects from the database
   const projects = prisma.project.findMany({
@@ -52,18 +64,6 @@ export async function updateProjectName(projectId: string, projectName: string):
   });
 
   // Return the updated project
-  return project;
-}
-
-export async function createNewProject(projectName: string): Promise<Project> {
-  // Create a new project with the provided name
-  const project = await prisma.project.create({
-    data: {
-      projectName,
-    },
-  });
-
-  // Return the new project
   return project;
 }
 

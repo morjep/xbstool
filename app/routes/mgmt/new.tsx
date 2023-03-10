@@ -12,7 +12,7 @@ import {
 
 import { createBreakdown, readAllBreakdowns } from "~/models/breakdown.server";
 import {
-  createNewProject,
+  createProject,
   getAllProjects,
   getProject,
   getProjectWithName,
@@ -32,7 +32,7 @@ export const action = async ({ request }: ActionArgs) => {
   const projectId = formData.get("projectId") as string;
 
   if (action === "newProject") {
-    await createNewProject(newProject);
+    await createProject(newProject);
   }
 
   if (action === "newBreakdown") {
