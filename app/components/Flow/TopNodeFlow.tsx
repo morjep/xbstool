@@ -2,18 +2,18 @@ import type { FC, CSSProperties } from "react";
 import { memo } from "react";
 import type { NodeProps } from "reactflow";
 import { Handle, Position } from "reactflow";
-import Node from "./Node";
+import NodeFlow from "./NodeFlow";
 
 const sourceHandleStyle: CSSProperties = {};
 
-const TopNode: FC<NodeProps> = ({ data }) => {
+const TopNodeFlow: FC<NodeProps> = ({ data }) => {
   return (
     <>
-      <Node data={data}>
+      <NodeFlow data={data}>
         <Handle type="source" position={Position.Bottom} id="source" style={sourceHandleStyle} />
-      </Node>
+      </NodeFlow>
     </>
   );
 };
 
-export default memo(TopNode);
+export default memo(TopNodeFlow);

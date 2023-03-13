@@ -164,6 +164,7 @@ export class WBS {
   wbsLines: string[];
   parentNodes: number;
   validWBS: boolean;
+  connectParents: boolean = false;
   constructor(data: string) {
     if (data) {
       this.wbsLines = data.trim().split("\n");
@@ -190,5 +191,11 @@ export class WBS {
   // The getValidWBS method returns the boolean value of the WBS
   isValidWBS() {
     return this.validWBS;
+  }
+  setConnectParents(value: boolean) {
+    this.connectParents = value;
+  }
+  getConnectParents() {
+    return this.connectParents;
   }
 }

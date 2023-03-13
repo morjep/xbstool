@@ -11,11 +11,11 @@ class TopNode {
   };
   type: string;
   node: Node = {} as Node;
+  children: string[] = [];
+  childCount: number = 0;
+
   constructor(id: string, wbsNode: WBSNode) {
     this.id = id;
-    if (wbsNode.connectParents()) {
-      this.id = "-1"; // Meaning it is not a node anyone can connect to
-    }
     this.position = {
       x: 0,
       y: 0,
@@ -38,8 +38,74 @@ class TopNode {
       type: this.type,
     };
   }
-  getTopNodeId() {
+  getId() {
     return this.id;
+  }
+  addChild(id: string) {
+    this.children.push(id);
+    this.childCount++;
+  }
+  getNumberOfChildren() {
+    return this.childCount;
+  }
+}
+
+class ParentNode {
+  id: string;
+  parentId: string;
+  position: {
+    x: number;
+    y: number;
+  };
+  type: string;
+  node: Node = {} as Node;
+  edgeSource: string = "";
+  edgeTarget: string = "";
+
+  constructor(id: string, parentId: string, wbsNode: WBSNode) {
+    this.id = id;
+    this.parentId = parentId;
+    this.position = {
+      x: 0,
+      y: 0,
+    };
+    this.type = "parent";
+    const { showProgressBar, progress } = wbsNode.getProgressBar();
+
+    this.node = {
+      id: this.id,
+      data: {
+        label: wbsNode.getLineLabelShort(),
+        due: wbsNode.getDueDate(),
+        indicator: wbsNode.getIndicator(),
+        est: wbsNode.getEstimate(),
+        comment: wbsNode.getLineComment(),
+        progressBar: showProgressBar,
+        progressValue: progress,
+      },
+      position: this.position,
+      type: this.type,
+    };
+    this.edgeSource = this.parentId;
+    this.edgeTarget = this.id;
+  }
+
+  getId() {
+    return this.id;
+  }
+  getParentId() {
+    return this.parentId;
+  }
+  setPos(x: number, y: number) {
+    this.position = { x, y };
+    this.node.position = this.position;
+  }
+  calcPos(count: number, parentsTotal: number) {
+    const parentXoffset = 250;
+    const parentY = 100;
+    const x = count * parentXoffset - (parentsTotal * parentXoffset) / 2 - parentXoffset / 2;
+    this.position = { x, y: parentY };
+    this.node.position = this.position;
   }
 }
 
@@ -51,7 +117,7 @@ const generateLayoutFromData = (data: string) => {
   let parentX = 0;
   let childYoffset = 0;
   let id = 0;
-  let parentId = 0;
+  let parentId = "";
   let nodePosition = { x: 0, y: 0 };
   let nodeType = "top";
   let edgeSource = "";
@@ -59,6 +125,8 @@ const generateLayoutFromData = (data: string) => {
   let prevParentId = "";
   let edgePrev = "";
   let topNode = {} as TopNode;
+  let parentNode = {} as ParentNode;
+  let parentNodes = [] as ParentNode[];
 
   const wbs = new WBS(data);
   if (wbs.isValidWBS()) {
@@ -71,24 +139,35 @@ const generateLayoutFromData = (data: string) => {
       if (wbsNode.isValidLevel()) {
         if (wbsNode.isTop()) {
           topNode = new TopNode(id.toString(), wbsNode);
+          wbs.setConnectParents(wbsNode.connectParents());
         }
+
         if (wbsNode.isParent()) {
-          parentId = id;
+          parentNode = new ParentNode(id.toString(), topNode.getId(), wbsNode);
+          topNode.addChild(parentNode.getId());
+          parentNode.calcPos(topNode.getNumberOfChildren(), wbs.getNumberOfParentNodes());
           parentCount = parentCount + 1;
           parentX =
             parentCount * parentXoffset -
             (wbs.getNumberOfParentNodes() * parentXoffset) / 2 -
             parentXoffset / 2;
           childYoffset = 100;
-          nodePosition = { x: parentX, y: 100 };
+          // nodePosition = { x: parentX, y: 100 };
+          // parentNode.setPos(parentX, 100);
           nodeType = "parent";
-          edgeSource = topNode.getTopNodeId().toString();
-          edgeTarget = id.toString();
+          edgeSource = !wbs.getConnectParents() ? topNode.getId() : "-1";
+          edgeTarget = parentNode.getId();
 
           edgePrev = prevParentId;
-          prevParentId = id.toString();
+          prevParentId = parentNode.getId();
+
+          parentId = parentNode.getId();
+          parentNodes.push(parentNode);
         }
+
         if (wbsNode.isChild()) {
+          // Get parent data from the last entry in the parentNodes array
+          parentNode = parentNodes[parentNodes.length - 1];
           nodePosition = { x: parentX + 35, y: childYoffset + 100 };
           nodeType = "child";
           if (wbsNode.getLineLabel().length < 26) {
@@ -106,6 +185,8 @@ const generateLayoutFromData = (data: string) => {
         // Create the node
         if (wbsNode.isTop()) {
           nodes.push(topNode.node);
+        } else if (wbsNode.isParent()) {
+          nodes.push(parentNode.node);
         } else {
           const _node: Node = {
             id: id.toString(),
@@ -124,6 +205,7 @@ const generateLayoutFromData = (data: string) => {
         }
 
         // Create the edge
+
         const edge: Edge = {
           id: id.toString(),
           source: edgeSource,
@@ -145,7 +227,7 @@ const generateLayoutFromData = (data: string) => {
         edges.push(edge);
 
         // Create the edge to the previous parent
-        if (wbsNode.connectParents() && edgePrev != "") {
+        if (wbs.getConnectParents() && edgePrev != "") {
           const edge: Edge = {
             id: id.toString(),
             source: edgePrev,

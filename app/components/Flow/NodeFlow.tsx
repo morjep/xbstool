@@ -23,7 +23,7 @@ const Box = ({
   );
 };
 
-const Node = ({ data, children }: { data: any; children: any }) => {
+const NodeFlow = ({ data, children }: { data: any; children: any }) => {
   return (
     <div className="indicator">
       {data.indicator == "success" && (
@@ -53,4 +53,4 @@ const Node = ({ data, children }: { data: any; children: any }) => {
   );
 };
 
-export default Node;
+export default NodeFlow;

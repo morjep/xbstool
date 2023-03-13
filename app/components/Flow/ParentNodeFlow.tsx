@@ -2,25 +2,25 @@ import type { FC, CSSProperties } from "react";
 import { memo } from "react";
 import type { NodeProps } from "reactflow";
 import { Handle, Position } from "reactflow";
-import Node from "./Node";
+import NodeFlow from "./NodeFlow";
 
 const targetHandleStyle: CSSProperties = {};
 const sourceHandleStyle: CSSProperties = { left: 10 };
 const handleStyle: CSSProperties = { top: 12 };
 
-const ParentNode: FC<NodeProps> = ({ data }) => {
+const ParentNodeFlow: FC<NodeProps> = ({ data }) => {
   console.log(data);
   return (
     <>
-      <Node data={data}>
+      <NodeFlow data={data}>
         <Handle type="target" position={Position.Left} id="next" style={handleStyle} />
         <Handle type="source" position={Position.Right} id="prev" style={handleStyle} />
 
         <Handle type="target" position={Position.Top} id="target" style={targetHandleStyle} />
         <Handle type="source" position={Position.Bottom} id="source" style={sourceHandleStyle} />
-      </Node>
+      </NodeFlow>
     </>
   );
 };
 
-export default memo(ParentNode);
+export default memo(ParentNodeFlow);

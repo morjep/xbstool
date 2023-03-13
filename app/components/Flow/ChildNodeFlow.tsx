@@ -2,18 +2,18 @@ import type { FC, CSSProperties } from "react";
 import { memo } from "react";
 import type { NodeProps } from "reactflow";
 import { Handle, Position } from "reactflow";
-import Node from "./Node";
+import NodeFlow from "./NodeFlow";
 
 const targetHandleStyle: CSSProperties = {};
 
-const ChildNode: FC<NodeProps> = ({ data }) => {
+const ChildNodeFlow: FC<NodeProps> = ({ data }) => {
   return (
     <>
-      <Node data={data}>
+      <NodeFlow data={data}>
         <Handle type="target" position={Position.Left} id="target" style={targetHandleStyle} />
-      </Node>
+      </NodeFlow>
     </>
   );
 };
 
-export default memo(ChildNode);
+export default memo(ChildNodeFlow);

@@ -2,14 +2,14 @@ import { useCallback } from "react";
 import ReactFlow, { useNodesState, useEdgesState, addEdge, Controls } from "reactflow";
 import type { Connection, Node, Edge } from "reactflow";
 
-import ChildNode from "./ChildNode";
-import TopNode from "./TopNode";
-import ParentNode from "./ParentNode";
+import ChildNodeFlow from "./ChildNodeFlow";
+import TopNodeFlow from "./TopNodeFlow";
+import ParentNodeFlow from "./ParentNodeFlow";
 
 const nodeTypes = {
-  child: ChildNode,
-  top: TopNode,
-  parent: ParentNode,
+  child: ChildNodeFlow,
+  top: TopNodeFlow,
+  parent: ParentNodeFlow,
 };
 
 function Flow({ initialNodes, initialEdges }: { initialNodes: Node[]; initialEdges: Edge[] }) {
