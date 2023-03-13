@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import ReactFlow, { useNodesState, useEdgesState, addEdge, Controls, MiniMap } from "reactflow";
+import ReactFlow, { useNodesState, useEdgesState, addEdge, Controls } from "reactflow";
 import type { Connection, Node, Edge } from "reactflow";
 
 import ChildNode from "./ChildNode";
