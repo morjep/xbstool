@@ -2,257 +2,138 @@ import { MarkerType } from "reactflow";
 import type { Node, Edge } from "reactflow";
 import { WBS, WBSNode } from "./layoutUtils";
 
-class TopNode {
-  id: string;
-
-  position: {
-    x: number;
-    y: number;
-  };
-  type: string;
-  node: Node = {} as Node;
-  children: string[] = [];
-  childCount: number = 0;
-
-  constructor(id: string, wbsNode: WBSNode) {
-    this.id = id;
-    this.position = {
-      x: 0,
-      y: 0,
-    };
-    this.type = "top";
-    const { showProgressBar, progress } = wbsNode.getProgressBar();
-
-    this.node = {
-      id: this.id,
-      data: {
-        label: wbsNode.getLineLabelShort(),
-        due: wbsNode.getDueDate(),
-        indicator: wbsNode.getIndicator(),
-        est: wbsNode.getEstimate(),
-        comment: wbsNode.getLineComment(),
-        progressBar: showProgressBar,
-        progressValue: progress,
-      },
-      position: this.position,
-      type: this.type,
-    };
-  }
-  getId() {
-    return this.id;
-  }
-  addChild(id: string) {
-    this.children.push(id);
-    this.childCount++;
-  }
-  getNumberOfChildren() {
-    return this.childCount;
-  }
-}
-
-class ParentNode {
-  id: string;
-  parentId: string;
-  position: {
-    x: number;
-    y: number;
-  };
-  type: string;
-  node: Node = {} as Node;
-  edgeSource: string = "";
-  edgeTarget: string = "";
-
-  constructor(id: string, parentId: string, wbsNode: WBSNode) {
-    this.id = id;
-    this.parentId = parentId;
-    this.position = {
-      x: 0,
-      y: 0,
-    };
-    this.type = "parent";
-    const { showProgressBar, progress } = wbsNode.getProgressBar();
-
-    this.node = {
-      id: this.id,
-      data: {
-        label: wbsNode.getLineLabelShort(),
-        due: wbsNode.getDueDate(),
-        indicator: wbsNode.getIndicator(),
-        est: wbsNode.getEstimate(),
-        comment: wbsNode.getLineComment(),
-        progressBar: showProgressBar,
-        progressValue: progress,
-      },
-      position: this.position,
-      type: this.type,
-    };
-    this.edgeSource = this.parentId;
-    this.edgeTarget = this.id;
-  }
-
-  getId() {
-    return this.id;
-  }
-  getParentId() {
-    return this.parentId;
-  }
-  setPos(x: number, y: number) {
-    this.position = { x, y };
-    this.node.position = this.position;
-  }
-  calcPos(count: number, parentsTotal: number) {
-    const parentXoffset = 250;
-    const parentY = 100;
-    const x = count * parentXoffset - (parentsTotal * parentXoffset) / 2 - parentXoffset / 2;
-    this.position = { x, y: parentY };
-    this.node.position = this.position;
-  }
-}
-
 const generateLayoutFromData = (data: string) => {
   const nodes: Node[] = [];
   const edges: Edge[] = [];
-  let parentCount = 0;
-  const parentXoffset = 250;
-  let parentX = 0;
-  let childYoffset = 0;
-  let id = 0;
-  let parentId = "";
-  let nodePosition = { x: 0, y: 0 };
-  let nodeType = "top";
-  let edgeSource = "";
-  let edgeTarget = "";
-  let prevParentId = "";
-  let edgePrev = "";
-  let topNode = {} as TopNode;
-  let parentNode = {} as ParentNode;
-  let parentNodes = [] as ParentNode[];
+
+  let nextChildYoffset = 0;
 
   const wbs = new WBS(data);
   if (wbs.isValidWBS()) {
     wbs.getWbsLines().forEach((wbsline: string) => {
-      id = id + 1;
-
-      const wbsNode = new WBSNode(wbsline);
-      const { showProgressBar, progress } = wbsNode.getProgressBar();
+      const wbsNode = new WBSNode(wbsline, wbs.getNewId());
 
       if (wbsNode.isValidLevel()) {
-        if (wbsNode.isTop()) {
-          topNode = new TopNode(id.toString(), wbsNode);
+        wbs.addNode(wbsNode);
+
+        if (wbsNode.level() === 1) {
           wbs.setConnectParents(wbsNode.connectParents());
         }
 
-        if (wbsNode.isParent()) {
-          parentNode = new ParentNode(id.toString(), topNode.getId(), wbsNode);
-          topNode.addChild(parentNode.getId());
-          parentNode.calcPos(topNode.getNumberOfChildren(), wbs.getNumberOfParentNodes());
-          parentCount = parentCount + 1;
-          parentX =
-            parentCount * parentXoffset -
-            (wbs.getNumberOfParentNodes() * parentXoffset) / 2 -
-            parentXoffset / 2;
-          childYoffset = 100;
-          // nodePosition = { x: parentX, y: 100 };
-          // parentNode.setPos(parentX, 100);
-          nodeType = "parent";
-          edgeSource = !wbs.getConnectParents() ? topNode.getId() : "-1";
-          edgeTarget = parentNode.getId();
-
-          edgePrev = prevParentId;
-          prevParentId = parentNode.getId();
-
-          parentId = parentNode.getId();
-          parentNodes.push(parentNode);
+        if (wbsNode.level() === 2) {
+          const parentNumber = wbsNode.parent.children.length;
+          const totalParents = wbs.getNumberOfParentNodes();
+          const { x, y } = calcParentPos(parentNumber, totalParents);
+          wbsNode.setPos(x, y);
         }
 
-        if (wbsNode.isChild()) {
-          // Get parent data from the last entry in the parentNodes array
-          parentNode = parentNodes[parentNodes.length - 1];
-          nodePosition = { x: parentX + 35, y: childYoffset + 100 };
-          nodeType = "child";
-          if (wbsNode.getLineLabel().length < 26) {
-            childYoffset = childYoffset + 60; // for the next child
-          } else {
-            childYoffset = childYoffset + 80; // for the next child
+        if (wbsNode.level() === 3) {
+          const childNumber = wbsNode.parent.children.length;
+          const parentXpos = wbsNode.parent.position.x;
+
+          if (childNumber === 1) {
+            nextChildYoffset = 0;
           }
-          if (showProgressBar) {
-            childYoffset = childYoffset + 30; // for the next child
-          }
-          edgeSource = parentId.toString();
-          edgeTarget = id.toString();
-        }
+          const { x, y } = calcChildPos(parentXpos, nextChildYoffset);
+          wbsNode.setPos(x, y);
 
-        // Create the node
-        if (wbsNode.isTop()) {
-          nodes.push(topNode.node);
-        } else if (wbsNode.isParent()) {
-          nodes.push(parentNode.node);
-        } else {
-          const _node: Node = {
-            id: id.toString(),
-            data: {
-              label: wbsNode.getLineLabelShort(),
-              due: wbsNode.getDueDate(),
-              indicator: wbsNode.getIndicator(),
-              progressBar: showProgressBar,
-              progressValue: progress,
-              est: wbsNode.getEstimate(),
-            },
-            position: nodePosition,
-            type: nodeType,
-          };
-          nodes.push(_node);
-        }
-
-        // Create the edge
-
-        const edge: Edge = {
-          id: id.toString(),
-          source: edgeSource,
-          sourceHandle: "source",
-          target: edgeTarget,
-          targetHandle: "target",
-          type: "smoothstep",
-          markerEnd: {
-            type: MarkerType.ArrowClosed,
-            width: 20,
-            height: 20,
-            color: "#a3a3a3",
-          },
-          style: {
-            strokeWidth: 1,
-            stroke: "#a3a3a3",
-          },
-        };
-        edges.push(edge);
-
-        // Create the edge to the previous parent
-        if (wbs.getConnectParents() && edgePrev != "") {
-          const edge: Edge = {
-            id: id.toString(),
-            source: edgePrev,
-            sourceHandle: "prev",
-            target: edgeTarget,
-            targetHandle: "next",
-            type: "bezier",
-            markerEnd: {
-              type: MarkerType.ArrowClosed,
-              width: 20,
-              height: 20,
-              color: "#a3a3a3",
-            },
-            style: {
-              strokeWidth: 2,
-              stroke: "#a3a3a3",
-            },
-          };
-          edges.push(edge);
+          nextChildYoffset = updateNextChildYoffset(wbsNode, nextChildYoffset);
         }
       }
     });
   }
 
+  // push all nodes in the wbs to the nodes array and create the edges
+  wbs.nodes.forEach((wbsNode: WBSNode) => {
+    nodes.push(wbsNode.node);
+
+    const edge =
+      wbsNode.level() === 2 && wbs.getConnectParents()
+        ? createParentParentEdge(wbsNode)
+        : createParentChildEdge(wbsNode);
+    edges.push(edge);
+  });
+
   return { nodes, edges };
 };
 
 export default generateLayoutFromData;
+
+function createParentChildEdge(wbsNode: WBSNode) {
+  const edge: Edge = {
+    id: wbsNode.id,
+    source: wbsNode.edgeSource,
+    sourceHandle: "source",
+    target: wbsNode.edgeTarget,
+    targetHandle: "target",
+    type: "smoothstep",
+    markerEnd: {
+      type: MarkerType.ArrowClosed,
+      width: 20,
+      height: 20,
+      color: "#a3a3a3",
+    },
+    style: {
+      strokeWidth: 1,
+      stroke: "#a3a3a3",
+    },
+  };
+  return edge;
+}
+
+function createParentParentEdge(wbsNode: WBSNode) {
+  const edge: Edge = {
+    id: wbsNode.id,
+    source: wbsNode.edgePrevParent,
+    sourceHandle: "prev",
+    target: wbsNode.edgeTarget,
+    targetHandle: "next",
+    type: "bezier",
+    markerEnd: {
+      type: MarkerType.ArrowClosed,
+      width: 20,
+      height: 20,
+      color: "#a3a3a3",
+    },
+    style: {
+      strokeWidth: 2,
+      stroke: "#a3a3a3",
+    },
+  };
+  return edge;
+}
+
+function calcParentPos(parentNumber: number, totalParents: number) {
+  const parentsXdistance = 250;
+  const parentsYpos = 100;
+
+  const x = parentsXdistance * (parentNumber - 0.5 * totalParents - 0.5);
+
+  return { x, y: parentsYpos };
+}
+
+function calcChildPos(parentXpos: number, yOffset: number) {
+  const childXoffset = 35;
+  const firstChildYpos = 200;
+
+  const x = parentXpos + childXoffset;
+
+  return { x, y: firstChildYpos + yOffset };
+}
+
+function updateNextChildYoffset(wbsNode: WBSNode, nextChildYoffset: number) {
+  const { showProgressBar } = wbsNode.getProgressBar();
+  const lineLabel = wbsNode.getLineLabel();
+
+  nextChildYoffset = nextChildYoffset + 60; // standard offset for the next child
+
+  if (lineLabel.length > 26) {
+    // if the line label is longer than 26 characters, add an extra offset
+    nextChildYoffset = nextChildYoffset + 20;
+  }
+  if (showProgressBar) {
+    // if the progress bar is shown, add an extra offset
+    nextChildYoffset = nextChildYoffset + 20;
+  }
+  return nextChildYoffset;
+}

@@ -1,3 +1,5 @@
+import type { Node, Edge } from "reactflow";
+
 // the class ProgressBar is used to validate the progress bar value
 // The contructor receives a string and identifies if there is a ProgressBar tag in the string
 export class ProgressBar {
@@ -64,8 +66,6 @@ export class DueDate {
   }
 }
 
-//The class content is used to validate the content of the node
-//The contructor receives a string and identifies the content of the node
 export class WBSNode {
   lineLevel: number;
   lineText: string;
@@ -76,15 +76,27 @@ export class WBSNode {
   indicator: string;
   estimate: string;
   progressBar = { showProgressBar: false, progress: "0" };
+  node: Node = {} as Node;
+  position: {
+    x: number;
+    y: number;
+  };
+  type: string;
+  id: string;
+  edgeSource: string = "";
+  edgeTarget: string = "";
+  edgePrevParent: string = "";
 
-  constructor(line: string) {
+  children: Node[] = [];
+  parent: Node | undefined;
+
+  constructor(line: string, id: string) {
     const regex = /^(?<level>\*+)\s*(?<text>.+?)(?<comment>\s*\/\/.*)?$/gm;
     const found = regex.exec(line.trimStart());
     this.lineLevel = found?.groups?.level?.length ?? 0;
     this.lineText = found?.groups?.text ?? "";
     this.lineComment = found?.groups?.comment?.trim() ?? "";
     this.lineLabel = this.lineText.replace(/__.*__/g, "").trim();
-    // Shorten the label if it is too long
     this.lineLabelShort =
       this.lineLabel.length > 50 ? this.lineLabel.substring(0, 50) + "..." : this.lineLabel;
 
@@ -99,6 +111,35 @@ export class WBSNode {
 
     const _p = new ProgressBar(this.lineText);
     this.progressBar = { showProgressBar: _p.getBar(), progress: _p.getProgress() };
+
+    this.id = id;
+    this.type = "";
+    this.position = {
+      x: 0,
+      y: 0,
+    };
+    if (this.lineLevel === 1) {
+      this.type = "top";
+    } else if (this.lineLevel === 2) {
+      this.type = "parent";
+    } else if (this.lineLevel === 3) {
+      this.type = "child";
+    }
+
+    this.node = {
+      id,
+      data: {
+        label: this.lineLabelShort,
+        due: this.dueDate,
+        indicator: this.indicator,
+        est: this.estimate,
+        comment: this.lineComment,
+        progressBar: this.progressBar.showProgressBar,
+        progressValue: this.progressBar.progress,
+      },
+      position: this.position,
+      type: this.type,
+    };
   }
 
   // The getProgress method returns the progress value
@@ -106,66 +147,44 @@ export class WBSNode {
     return this.progressBar;
   }
 
-  // The getEstimate method returns the estimate value
-  getEstimate() {
-    return this.estimate;
-  }
-
-  // The getDueDate method returns the due date value
-  getDueDate() {
-    return this.dueDate;
-  }
-
-  // The getIndicator method returns the indicator value
-  getIndicator() {
-    return this.indicator;
-  }
-  //The getLineLevel method returns the level of the node
-  getLineLevel() {
-    return this.lineLevel;
-  }
-  //The getLineText method returns the text of the node
-  getLineText() {
-    return this.lineText;
-  }
-  //The getLineComment method returns the comment of the node
-  getLineComment() {
-    return this.lineComment;
-  }
-  //The getLineLabel method returns the label of the node
   getLineLabel() {
     return this.lineLabel;
   }
-  //The getLineLabelShort method returns the short label of the node
-  getLineLabelShort() {
-    return this.lineLabelShort;
+
+  level() {
+    return this.lineLevel;
   }
 
-  isTop() {
-    return this.lineLevel === 1;
-  }
-  isParent() {
-    return this.lineLevel === 2;
-  }
-  isChild() {
-    return this.lineLevel === 3;
-  }
   isValidLevel() {
     return this.lineLevel > 0 && this.lineLevel <= 3;
   }
   connectParents() {
     return this.lineLevel === 1 && (this.lineText.match(/__connect_parents__/g) ? true : false);
   }
+
+  setPos(x: number, y: number) {
+    this.position = { x, y };
+    this.node.position = this.position;
+  }
+
+  addChild(child: Node) {
+    this.children.push(child);
+  }
 }
 
 // The class WBS is used to validate the WBS
 // The contructor receives a string and extracts the WBS lines and count level2 nodes
 export class WBS {
+  #id: number;
   wbsLines: string[];
   parentNodes: number;
   validWBS: boolean;
   connectParents: boolean = false;
+  prevNode: WBSNode = {} as WBSNode;
+  nodes = new Array<WBSNode>();
+
   constructor(data: string) {
+    this.#id = 0;
     if (data) {
       this.wbsLines = data.trim().split("\n");
       this.parentNodes = this.wbsLines.filter((line: string) =>
@@ -192,10 +211,55 @@ export class WBS {
   isValidWBS() {
     return this.validWBS;
   }
+
   setConnectParents(value: boolean) {
     this.connectParents = value;
   }
+
   getConnectParents() {
     return this.connectParents;
+  }
+
+  getNewId() {
+    this.#id += 1;
+    return this.#id.toString();
+  }
+
+  addNode(node: WBSNode) {
+    this.nodes.push(node);
+
+    // First node
+    if (this.nodes.length === 1) {
+      node.parent = undefined;
+    }
+
+    if (node.level() === 2) {
+      node.parent = this.nodes[0];
+      node.parent.addChild(node);
+
+      node.edgePrevParent = this.getSecondToLastLevel2Node().id; // previous parent
+      node.edgeSource = node.parent.id;
+      node.edgeTarget = node.id;
+    }
+
+    if (node.level() === 3) {
+      node.parent = this.getLastLevel2Node();
+      node.parent.addChild(node);
+
+      node.edgeSource = node.parent.id;
+      node.edgeTarget = node.id;
+    }
+  }
+
+  getSecondToLastLevel2Node() {
+    return this.nodes.filter((node) => node.level() === 2).slice(-2)[0];
+  }
+
+  getLastLevel2Node() {
+    return this.nodes.filter((node) => node.level() === 2).pop();
+  }
+
+  getFirstLevel2Node() {
+    return this.nodes.filter((node) => node.level() === 2).shift();
   }
 }
