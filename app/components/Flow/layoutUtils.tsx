@@ -1,4 +1,5 @@
 import type { Node, Edge } from "reactflow";
+import invariant from "tiny-invariant";
 
 // the class ProgressBar is used to validate the progress bar value
 // The contructor receives a string and identifies if there is a ProgressBar tag in the string
